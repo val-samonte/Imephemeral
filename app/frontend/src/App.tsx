@@ -1,6 +1,7 @@
 import { Buffer } from 'buffer'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
+import { MazeGenerator } from './components/MazeGenerator'
 
 function App() {
   const { publicKey, disconnect, signMessage } = useWallet()
@@ -39,6 +40,8 @@ function App() {
           )}
         </>
       )}
+      <div className='w-full my-2 border-b border-gray-300'></div>
+      <MazeGenerator />
     </div>
   )
 }
