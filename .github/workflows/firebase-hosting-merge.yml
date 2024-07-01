@@ -19,3 +19,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IMEPHEMERALS }}
           channelId: live
           projectId: imephemerals
+          entryPoint: app/frontend
