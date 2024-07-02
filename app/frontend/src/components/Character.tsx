@@ -8,6 +8,9 @@ export interface CharacterProps {
   x: number
   y: number
   facing: number
+  hp: number
+  maxHp: number
+  kills: number
   // ATTACK
   attackCooldown: number
   nextAttack: number
@@ -67,9 +70,12 @@ export type CharacterAction =
 export const charactersBaseAtom = atomFamily((_id: string) => {
   const now = Date.now()
   return atom<CharacterProps>({
-    x: 8,
-    y: 8,
+    x: 24,
+    y: 24,
+    hp: 100,
+    maxHp: 100,
     facing: 0b0100,
+    kills: 0,
     // ATTACK
     attackCooldown: 1000,
     nextAttack: now,
@@ -102,13 +108,16 @@ export const charactersAtom = atomFamily((id: string) =>
         isBlocking,
         isRolling,
         get canAttack() {
+          if (character.hp <= 0) return false
           if (isBlocking || isRolling) return false
           return Date.now() > character.nextAttack
         },
         get canBlock() {
+          if (character.hp <= 0) return false
           return Date.now() > character.nextBlock
         },
         get canRoll() {
+          if (character.hp <= 0) return false
           return Date.now() > character.nextRoll
         },
       }
@@ -159,7 +168,7 @@ export const charactersAtom = atomFamily((id: string) =>
 )
 
 export const Character: FC<{ id: string }> = ({ id }) => {
-  const { x, y, facing, nextAttack, attackType, isBlocking } = useAtomValue(
+  const { x, y, facing, nextAttack, attackType, isBlocking, hp } = useAtomValue(
     charactersAtom(id)
   )
   const scaleFactor = useAtomValue(scaleFactorAtom)
@@ -179,11 +188,7 @@ export const Character: FC<{ id: string }> = ({ id }) => {
 
   return (
     <div
-      className={cn(
-        'bg-blue-400 absolute flex items-center justify-center',
-        isBlocking && 'border-4 border-blue-800 border-solid',
-        facingClassname
-      )}
+      className={cn('absolute flex items-center justify-center')}
       style={{
         width: `${size}px`,
         height: `${size}px`,
@@ -192,34 +197,43 @@ export const Character: FC<{ id: string }> = ({ id }) => {
       }}
     >
       <div
-        className='ml-10 bg-white'
-        style={{
-          marginLeft: `${size * 0.5}px`,
-          width: `${size * 0.2}px`,
-          height: `${size * 0.2}px`,
-        }}
-      />
-      <div
-        className='absolute animate-fadeOut'
-        key={`attack_${nextAttack}`}
-        style={
-          attackType === 0
-            ? {
-                width: `${size * 0.5}px`,
-                height: `${size * 1.5}px`,
-                top: `${size * -0.25}px`,
-                right: `${size * -0.5}px`,
-                background: 'red',
-              }
-            : {
-                width: `${size}px`,
-                height: `${size * 0.5}px`,
-                top: `${size * 0.25}px`,
-                right: `${-size}px`,
-                background: 'red',
-              }
-        }
-      />
+        className={cn(
+          'bg-blue-400 absolute inset-0 flex items-center justify-center',
+          isBlocking && 'border-4 border-blue-800 border-solid',
+          facingClassname
+        )}
+      >
+        <div
+          className='ml-10 bg-white'
+          style={{
+            marginLeft: `${size * 0.5}px`,
+            width: `${size * 0.2}px`,
+            height: `${size * 0.2}px`,
+          }}
+        />
+        <div
+          className='absolute animate-fadeOut'
+          key={`attack_${nextAttack}`}
+          style={
+            attackType === 0
+              ? {
+                  width: `${size * 0.5}px`,
+                  height: `${size * 1.5}px`,
+                  top: `${size * -0.25}px`,
+                  right: `${size * -0.5}px`,
+                  background: 'red',
+                }
+              : {
+                  width: `${size}px`,
+                  height: `${size * 0.5}px`,
+                  top: `${size * 0.25}px`,
+                  right: `${-size}px`,
+                  background: 'red',
+                }
+          }
+        />
+      </div>
+      <div className='relative'>{hp}</div>
     </div>
   )
 }

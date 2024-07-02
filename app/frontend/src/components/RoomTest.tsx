@@ -31,29 +31,17 @@ export const RoomTest: FC = () => {
   return (
     <div
       ref={container}
-      className='fixed inset-0 bg-black flex flex-col items-center justify-center'
+      className='fixed inset-0 bg-black flex flex-col items-center justify-center pointer-events-none select-none'
     >
-      <div
-        className='landscape:h-full portrait:w-full aspect-square bg-white relative'
-        onClick={() => {
-          if (character.canAttack) {
-            action({ type: CharacterActionType.SLASH })
-          }
-        }}
-        onContextMenu={(e) => {
-          e.preventDefault()
-          if (character.canAttack) {
-            action({ type: CharacterActionType.STAB })
-          }
-        }}
-      >
+      <div className='landscape:h-full portrait:w-full aspect-square bg-white relative select-none'>
         <img
           src='/room_test.png'
-          className='w-full h-full absolute inset-0 select-none pointer-events-none'
+          className='w-full h-full absolute inset-0 select-none'
         />
+        <Character id='1' />
         <Character id='me' />
         <div
-          className='absolute bg-black/80 flex items-center justify-center pointer-events-none'
+          className='absolute bg-black/80 flex items-center justify-center select-none'
           style={{
             width: `${scaleFactor * 16 * 3}px`,
             height: `${scaleFactor * 16}px`,
@@ -70,7 +58,7 @@ export const RoomTest: FC = () => {
           />
         </div>
         <div
-          className='absolute bg-black/80 flex items-center justify-center pointer-events-none'
+          className='absolute bg-black/80 flex items-center justify-center select-none'
           style={{
             width: `${scaleFactor * 16}px`,
             height: `${scaleFactor * 16 * 3}px`,
@@ -87,7 +75,7 @@ export const RoomTest: FC = () => {
           />
         </div>
         <div
-          className='absolute bg-black/80 flex items-center justify-center pointer-events-none'
+          className='absolute bg-black/80 flex items-center justify-center select-none'
           style={{
             width: `${scaleFactor * 16 * 3}px`,
             height: `${scaleFactor * 16}px`,
@@ -104,7 +92,7 @@ export const RoomTest: FC = () => {
           />
         </div>
         <div
-          className='absolute bg-black/80 flex items-center justify-center pointer-events-none'
+          className='absolute bg-black/80 flex items-center justify-center select-none'
           style={{
             width: `${scaleFactor * 16}px`,
             height: `${scaleFactor * 16 * 3}px`,
@@ -120,6 +108,20 @@ export const RoomTest: FC = () => {
             }}
           />
         </div>
+        <div
+          className='w-full h-full pointer-events-auto select-none'
+          onClick={() => {
+            if (character.canAttack) {
+              action({ type: CharacterActionType.SLASH })
+            }
+          }}
+          onContextMenu={(e) => {
+            e.preventDefault()
+            if (character.canAttack) {
+              action({ type: CharacterActionType.STAB })
+            }
+          }}
+        ></div>
       </div>
     </div>
   )

@@ -18,6 +18,7 @@ export const Controller: FC = () => {
       switch (event.key) {
         case 'ArrowUp':
         case 'w': {
+          if (character.hp <= 0) break
           if (character.facing !== 0b1000) {
             action({ type: CharacterActionType.TURN, facing: 0b1000 })
           } else if (character.y > borderTop) {
@@ -31,6 +32,7 @@ export const Controller: FC = () => {
         }
         case 'ArrowRight':
         case 'd': {
+          if (character.hp <= 0) break
           if (character.facing !== 0b0100) {
             action({ type: CharacterActionType.TURN, facing: 0b0100 })
           } else if (character.x < borderRight) {
@@ -44,6 +46,7 @@ export const Controller: FC = () => {
         }
         case 'ArrowDown':
         case 's': {
+          if (character.hp <= 0) break
           if (character.facing !== 0b0010) {
             action({ type: CharacterActionType.TURN, facing: 0b0010 })
           } else if (character.y < borderBottom) {
@@ -57,6 +60,7 @@ export const Controller: FC = () => {
         }
         case 'ArrowLeft':
         case 'a': {
+          if (character.hp <= 0) break
           if (character.facing !== 0b0001) {
             action({ type: CharacterActionType.TURN, facing: 0b0001 })
           } else if (character.x > borderLeft) {
@@ -68,6 +72,7 @@ export const Controller: FC = () => {
           }
           break
         }
+        case 'SpaceBar':
         case 'q': {
           if (character.canBlock) {
             action({ type: CharacterActionType.BLOCK })
