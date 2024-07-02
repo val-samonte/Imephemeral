@@ -53,7 +53,7 @@ export const MazeGenerator: FC = () => {
           ></div>
         ))}
       </div>
-      <pre>{JSON.stringify(portals, null, 2)}</pre>
+      <pre className='text-xs text-wrap'>{JSON.stringify(portals)}</pre>
     </>
   )
 }

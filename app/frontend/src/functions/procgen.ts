@@ -1,5 +1,3 @@
-import { sha256 } from './sha256'
-
 const directions = ['N', 'E', 'S', 'W']
 
 export interface Room {
@@ -59,14 +57,21 @@ function connectRooms(room1: Room, room2: Room, dir: string) {
 }
 
 async function generateSeededRandom(seed: string) {
+  const seedHash = async (data: BufferSource) => {
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+    return Array.from(new Uint8Array(hashBuffer))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('')
+  }
+
   const encoder = new TextEncoder()
   let data = encoder.encode(seed)
-  let hash = await sha256(data)
+  let hash = await seedHash(data)
   let index = 0
 
-  return async function () {
+  return async () => {
     if (index >= hash.length) {
-      hash = await sha256(encoder.encode(hash))
+      hash = await seedHash(encoder.encode(hash))
       index = 0
     }
 
@@ -79,6 +84,8 @@ async function generateSeededRandom(seed: string) {
 }
 
 export async function generateMaze(size: number, seed: string) {
+  // console.time('generateMaze')
+
   const rooms = Array.from({ length: size * size }, (_, i) =>
     createRoom(i % size, Math.floor(i / size))
   )
@@ -135,6 +142,7 @@ export async function generateMaze(size: number, seed: string) {
       })
     }
   }
+  // console.timeEnd('generateMaze')
 
   return rooms
 }
