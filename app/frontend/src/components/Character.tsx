@@ -5,12 +5,16 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { scaleFactorAtom } from './RoomTest'
 
 export interface CharacterProps {
-  x: number
-  y: number
-  facing: number
   hp: number
   maxHp: number
   kills: number
+  // MOVE
+  x: number
+  y: number
+  facing: number
+  nextMove: number
+  canMove: boolean
+  moveCooldown: number
   // ATTACK
   attackCooldown: number
   nextAttack: number
@@ -32,7 +36,6 @@ export interface CharacterProps {
 
 export enum CharacterActionType {
   BACKEND_UPDATE = 'BACKEND_UPDATE',
-  TURN = 'TURN',
   MOVE = 'MOVE',
   SWITCH_ATTACK = 'SWITCH_ATTACK',
   ATTACK = 'ATTACK',
@@ -46,13 +49,10 @@ export type CharacterAction =
       character: Partial<CharacterProps>
     }
   | {
-      type: CharacterActionType.TURN
-      facing: number
-    }
-  | {
       type: CharacterActionType.MOVE
       x: number
       y: number
+      facing: number
     }
   | {
       type: CharacterActionType.SWITCH_ATTACK
@@ -70,12 +70,16 @@ export type CharacterAction =
 export const charactersBaseAtom = atomFamily((_id: string) => {
   const now = Date.now()
   return atom<CharacterProps>({
-    x: 24,
-    y: 24,
     hp: 100,
     maxHp: 100,
-    facing: 0b0100,
     kills: 0,
+    // MOVE
+    x: 24,
+    y: 24,
+    facing: 0b0100,
+    nextMove: now,
+    canMove: true,
+    moveCooldown: 100,
     // ATTACK
     attackCooldown: 1000,
     nextAttack: now,
@@ -102,6 +106,10 @@ export const charactersAtom = atomFamily((id: string) =>
       const character = get(charactersBaseAtom(id))
       return {
         ...character,
+        get canMove() {
+          if (character.hp <= 0) return false
+          return Date.now() > character.nextMove
+        },
         get canAttack() {
           if (character.hp <= 0) return false
           const isBlocking =
@@ -126,15 +134,13 @@ export const charactersAtom = atomFamily((id: string) =>
       const now = Date.now()
 
       switch (action.type) {
-        case CharacterActionType.TURN: {
-          set(charactersBaseAtom(id), { ...character, facing: action.facing })
-          break
-        }
         case CharacterActionType.MOVE: {
           set(charactersBaseAtom(id), {
             ...character,
             x: action.x,
             y: action.y,
+            facing: action.facing,
+            nextMove: now + character.moveCooldown,
           })
           break
         }
@@ -206,7 +212,9 @@ export const Character: FC<{ id: string }> = ({ id }) => {
 
   return (
     <div
-      className={cn('absolute flex items-center justify-center')}
+      className={cn(
+        'absolute flex items-center justify-center transition-all duration-100 linear'
+      )}
       style={{
         width: `${size}px`,
         height: `${size}px`,

@@ -1,87 +1,41 @@
-import { useAtom, useAtomValue } from 'jotai'
-import { FC, useEffect } from 'react'
+import { atom, useSetAtom } from 'jotai'
+import { FC, useEffect, useRef } from 'react'
 import { CharacterActionType, charactersAtom } from './Character'
-import { roomTotalStepSizeAtom } from './RoomTest'
+
+export const keypressedAtom = atom('')
 
 export const Controller: FC = () => {
-  const totalSteps = useAtomValue(roomTotalStepSizeAtom)
-  const [character, action] = useAtom(charactersAtom('me'))
-
-  const borderTop = 8
-  const borderRight = totalSteps - 8 - 4
-  const borderBottom = totalSteps - 8 - 4
-  const borderLeft = 8
+  const action = useSetAtom(charactersAtom('me'))
+  const setKeyPressed = useSetAtom(keypressedAtom)
+  const pressedKeysList = useRef<string[]>([])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       event.preventDefault()
       switch (event.key) {
-        case 'ArrowUp':
-        case 'w': {
-          if (character.hp <= 0) break
-          if (character.facing !== 0b1000) {
-            action({ type: CharacterActionType.TURN, facing: 0b1000 })
-          } else if (character.y > borderTop) {
-            action({
-              type: CharacterActionType.MOVE,
-              x: character.x,
-              y: character.y - 1,
-            })
-          }
-          break
-        }
-        case 'ArrowRight':
-        case 'd': {
-          if (character.hp <= 0) break
-          if (character.facing !== 0b0100) {
-            action({ type: CharacterActionType.TURN, facing: 0b0100 })
-          } else if (character.x < borderRight) {
-            action({
-              type: CharacterActionType.MOVE,
-              x: character.x + 1,
-              y: character.y,
-            })
-          }
-          break
-        }
-        case 'ArrowDown':
-        case 's': {
-          if (character.hp <= 0) break
-          if (character.facing !== 0b0010) {
-            action({ type: CharacterActionType.TURN, facing: 0b0010 })
-          } else if (character.y < borderBottom) {
-            action({
-              type: CharacterActionType.MOVE,
-              x: character.x,
-              y: character.y + 1,
-            })
-          }
-          break
-        }
-        case 'ArrowLeft':
-        case 'a': {
-          if (character.hp <= 0) break
-          if (character.facing !== 0b0001) {
-            action({ type: CharacterActionType.TURN, facing: 0b0001 })
-          } else if (character.x > borderLeft) {
-            action({
-              type: CharacterActionType.MOVE,
-              x: character.x - 1,
-              y: character.y,
-            })
-          }
-          break
-        }
         case 'q': {
-          if (character.hp <= 0) break
           action({ type: CharacterActionType.SWITCH_ATTACK })
           break
+        }
+        // to game loop
+        default: {
+          pressedKeysList.current = pressedKeysList.current.filter(
+            (key) => key !== event.key
+          )
+          pressedKeysList.current.push(event.key)
+
+          setKeyPressed(event.key)
         }
       }
     }
 
     const handleKeyUp = (event: KeyboardEvent) => {
-      console.log('Key up:', event.key)
+      pressedKeysList.current = pressedKeysList.current.filter(
+        (key) => key !== event.key
+      )
+      const next =
+        pressedKeysList.current[pressedKeysList.current.length - 1] ?? ''
+      setKeyPressed(next)
     }
 
     window.addEventListener('keydown', handleKeyDown)
@@ -91,7 +45,7 @@ export const Controller: FC = () => {
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
     }
-  }, [roomTotalStepSizeAtom, character, action])
+  }, [setKeyPressed, action])
 
   return null
 }

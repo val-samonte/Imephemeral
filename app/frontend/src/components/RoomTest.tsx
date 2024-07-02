@@ -1,6 +1,7 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
 import { Character, CharacterActionType, charactersAtom } from './Character'
+import CooldownTimer from './CooldownTimer'
 
 export const windowSizeAtom = atom(1)
 export const scaleFactorAtom = atom((get) => get(windowSizeAtom) / 208)
@@ -117,11 +118,32 @@ export const RoomTest: FC = () => {
           }}
           onContextMenu={(e) => {
             e.preventDefault()
-            if (character.canAttack) {
+            if (character.canBlock) {
               action({ type: CharacterActionType.BLOCK })
             }
           }}
         ></div>
+      </div>
+      <div className='text-white font-mono font-bold absolute top-0 left-0 p-5'>
+        <p>Attack: left click</p>
+        <p>Block: right click</p>
+        <p>Switch Attack Mode: q</p>
+        <p>Move: WASD keys</p>
+        <hr className='my-2' />
+        <p>Kills: {character.kills}</p>
+        <p>Attack Mode: {character.attackType === 0 ? 'Slash' : 'Stab'}</p>
+        {!character.canAttack && (
+          <p>
+            Attack Cooldown:{' '}
+            <CooldownTimer dateTo={character.nextAttack} format='sSSS[ms]' />
+          </p>
+        )}
+        {!character.canBlock && (
+          <p>
+            Block Cooldown:{' '}
+            <CooldownTimer dateTo={character.nextBlock} format='sSSS[ms]' />
+          </p>
+        )}
       </div>
     </div>
   )

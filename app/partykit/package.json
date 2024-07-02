@@ -1,0 +1,17 @@
+{
+  "name": "partykit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Val",
+  "license": "ISC",
+  "devDependencies": {
+    "partykit": "0.0.107"
+  },
+  "dependencies": {
+    "partysocket": "1.0.1"
+  }
+}
