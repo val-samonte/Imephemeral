@@ -1,6 +1,12 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
-import { Character, CharacterActionType, charactersAtom } from './Character'
+import { Account, sessionAddressAtom } from './Account'
+import {
+  Character,
+  CharacterActionType,
+  charactersAtom,
+  charactersListAtom,
+} from './Character'
 import CooldownTimer from './CooldownTimer'
 
 export const windowSizeAtom = atom(1)
@@ -11,7 +17,9 @@ export const RoomTest: FC = () => {
   const container = useRef<HTMLDivElement>(null)
   const setWindowSize = useSetAtom(windowSizeAtom)
   const scaleFactor = useAtomValue(scaleFactorAtom)
-  const [character, action] = useAtom(charactersAtom('me'))
+  const sessionAddress = useAtomValue(sessionAddressAtom)
+  const [character, action] = useAtom(charactersAtom(sessionAddress))
+  const charactersList = useAtomValue(charactersListAtom)
 
   useEffect(() => {
     const resize = () => {
@@ -39,8 +47,9 @@ export const RoomTest: FC = () => {
           src='/room_test.png'
           className='w-full h-full absolute inset-0 select-none'
         />
-        <Character id='1' />
-        <Character id='me' />
+        {charactersList.map((id) => (
+          <Character id={id} key={`character_${id}`} />
+        ))}
         <div
           className='absolute bg-black/80 flex items-center justify-center select-none'
           style={{
@@ -132,18 +141,21 @@ export const RoomTest: FC = () => {
         <hr className='my-2' />
         <p>Kills: {character.kills}</p>
         <p>Attack Mode: {character.attackType === 0 ? 'Slash' : 'Stab'}</p>
-        {!character.canAttack && (
-          <p>
-            Attack Cooldown:{' '}
-            <CooldownTimer dateTo={character.nextAttack} format='sSSS[ms]' />
-          </p>
-        )}
-        {!character.canBlock && (
-          <p>
-            Block Cooldown:{' '}
-            <CooldownTimer dateTo={character.nextBlock} format='sSSS[ms]' />
-          </p>
-        )}
+        <p>
+          <CooldownTimer
+            dateTo={character.nextAttack}
+            format='[Attack Cooldown:] sSSS[ms]'
+          />
+        </p>
+        <p>
+          <CooldownTimer
+            dateTo={character.nextBlock}
+            format='[Block Cooldown:] sSSS[ms]'
+          />
+        </p>
+      </div>
+      <div className='absolute bottom-0 right-0 p-5'>
+        <Account />
       </div>
     </div>
   )

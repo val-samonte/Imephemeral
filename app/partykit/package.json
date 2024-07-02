@@ -12,6 +12,8 @@
     "partykit": "0.0.107"
   },
   "dependencies": {
-    "partysocket": "1.0.1"
+    "bs58": "^6.0.0",
+    "partysocket": "1.0.1",
+    "tweetnacl": "^1.0.3"
   }
 }

@@ -1,11 +1,13 @@
-import { atom, useSetAtom } from 'jotai'
+import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
+import { sessionAddressAtom } from './Account'
 import { CharacterActionType, charactersAtom } from './Character'
 
 export const keypressedAtom = atom('')
 
 export const Controller: FC = () => {
-  const action = useSetAtom(charactersAtom('me'))
+  const sessionAddress = useAtomValue(sessionAddressAtom)
+  const action = useSetAtom(charactersAtom(sessionAddress))
   const setKeyPressed = useSetAtom(keypressedAtom)
   const pressedKeysList = useRef<string[]>([])
 

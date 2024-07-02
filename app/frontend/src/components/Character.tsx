@@ -25,13 +25,15 @@ export interface CharacterProps {
   blockDuration: number
   nextBlock: number
   canBlock: boolean
-  // isBlocking: boolean
   // ROLL
   rollDuration: number
   rollCooldown: number
   nextRoll: number
   canRoll: boolean
-  // isRolling: boolean
+}
+
+export interface Character extends CharacterProps {
+  id: string
 }
 
 export enum CharacterActionType {
@@ -67,10 +69,12 @@ export type CharacterAction =
       type: CharacterActionType.ROLL
     }
 
+export const charactersListAtom = atom<string[]>([])
+
 export const charactersBaseAtom = atomFamily((_id: string) => {
   const now = Date.now()
   return atom<CharacterProps>({
-    hp: 100,
+    hp: 0,
     maxHp: 100,
     kills: 0,
     // MOVE

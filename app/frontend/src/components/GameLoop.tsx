@@ -1,12 +1,14 @@
 import { useAtom, useAtomValue } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
+import { sessionAddressAtom } from './Account'
 import { CharacterActionType, charactersAtom } from './Character'
 import { keypressedAtom } from './Controller'
 import { roomTotalStepSizeAtom } from './RoomTest'
 
 export const GameLoop: FC = () => {
   const totalSteps = useAtomValue(roomTotalStepSizeAtom)
-  const [character, action] = useAtom(charactersAtom('me'))
+  const sessionAddress = useAtomValue(sessionAddressAtom)
+  const [character, action] = useAtom(charactersAtom(sessionAddress))
   const keypressed = useAtomValue(keypressedAtom)
   const borderTop = 8
   const borderRight = totalSteps - 8 - 4
