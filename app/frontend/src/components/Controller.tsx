@@ -72,11 +72,9 @@ export const Controller: FC = () => {
           }
           break
         }
-        case 'SpaceBar':
         case 'q': {
-          if (character.canBlock) {
-            action({ type: CharacterActionType.BLOCK })
-          }
+          if (character.hp <= 0) break
+          action({ type: CharacterActionType.SWITCH_ATTACK })
           break
         }
       }

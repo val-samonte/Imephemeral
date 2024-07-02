@@ -112,13 +112,13 @@ export const RoomTest: FC = () => {
           className='w-full h-full pointer-events-auto select-none'
           onClick={() => {
             if (character.canAttack) {
-              action({ type: CharacterActionType.SLASH })
+              action({ type: CharacterActionType.ATTACK })
             }
           }}
           onContextMenu={(e) => {
             e.preventDefault()
             if (character.canAttack) {
-              action({ type: CharacterActionType.STAB })
+              action({ type: CharacterActionType.BLOCK })
             }
           }}
         ></div>

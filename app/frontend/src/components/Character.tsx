@@ -1,7 +1,7 @@
 import cn from 'classnames'
 import { atom, useAtomValue } from 'jotai'
 import { atomFamily } from 'jotai/utils'
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { scaleFactorAtom } from './RoomTest'
 
 export interface CharacterProps {
@@ -21,21 +21,21 @@ export interface CharacterProps {
   blockDuration: number
   nextBlock: number
   canBlock: boolean
-  isBlocking: boolean
+  // isBlocking: boolean
   // ROLL
   rollDuration: number
   rollCooldown: number
   nextRoll: number
-  isRolling: boolean
   canRoll: boolean
+  // isRolling: boolean
 }
 
 export enum CharacterActionType {
   BACKEND_UPDATE = 'BACKEND_UPDATE',
   TURN = 'TURN',
   MOVE = 'MOVE',
-  SLASH = 'SLASH',
-  STAB = 'STAB',
+  SWITCH_ATTACK = 'SWITCH_ATTACK',
+  ATTACK = 'ATTACK',
   BLOCK = 'BLOCK',
   ROLL = 'ROLL',
 }
@@ -55,10 +55,10 @@ export type CharacterAction =
       y: number
     }
   | {
-      type: CharacterActionType.SLASH
+      type: CharacterActionType.SWITCH_ATTACK
     }
   | {
-      type: CharacterActionType.STAB
+      type: CharacterActionType.ATTACK
     }
   | {
       type: CharacterActionType.BLOCK
@@ -86,13 +86,13 @@ export const charactersBaseAtom = atomFamily((_id: string) => {
     blockDuration: 1000,
     nextBlock: now,
     canBlock: false,
-    isBlocking: false,
+    // isBlocking: false,
     // ROLL
     rollDuration: 1000,
     rollCooldown: 3000,
     nextRoll: now,
     canRoll: false,
-    isRolling: false,
+    // isRolling: false,
   })
 })
 
@@ -100,15 +100,14 @@ export const charactersAtom = atomFamily((id: string) =>
   atom(
     (get) => {
       const character = get(charactersBaseAtom(id))
-      const isBlocking =
-        Date.now() < character.nextBlock - character.blockCooldown
-      const isRolling = Date.now() < character.nextRoll - character.rollCooldown
       return {
         ...character,
-        isBlocking,
-        isRolling,
         get canAttack() {
           if (character.hp <= 0) return false
+          const isBlocking =
+            Date.now() < character.nextBlock - character.blockCooldown
+          const isRolling =
+            Date.now() < character.nextRoll - character.rollCooldown
           if (isBlocking || isRolling) return false
           return Date.now() > character.nextAttack
         },
@@ -139,11 +138,17 @@ export const charactersAtom = atomFamily((id: string) =>
           })
           break
         }
-        case CharacterActionType.STAB:
-        case CharacterActionType.SLASH: {
+        case CharacterActionType.SWITCH_ATTACK: {
           set(charactersBaseAtom(id), {
             ...character,
-            attackType: action.type === CharacterActionType.STAB ? 1 : 0,
+            attackType: character.attackType === 0 ? 1 : 0,
+          })
+          break
+        }
+        case CharacterActionType.ATTACK: {
+          set(charactersBaseAtom(id), {
+            ...character,
+            // attackType: action.type === CharacterActionType.ATTACK ? 1 : 0,
             nextAttack: now + character.attackCooldown,
           })
           break
@@ -168,11 +173,11 @@ export const charactersAtom = atomFamily((id: string) =>
 )
 
 export const Character: FC<{ id: string }> = ({ id }) => {
-  const { x, y, facing, nextAttack, attackType, isBlocking, hp } = useAtomValue(
-    charactersAtom(id)
-  )
+  const { x, y, facing, nextAttack, attackType, nextBlock, blockCooldown, hp } =
+    useAtomValue(charactersAtom(id))
   const scaleFactor = useAtomValue(scaleFactorAtom)
   const size = useMemo(() => 16 * scaleFactor, [scaleFactor])
+  const [isBlocking, setIsBlocking] = useState(false)
 
   const facingClassname = useMemo(() => {
     if ((facing & 0b1000) === 0b1000) {
@@ -185,6 +190,19 @@ export const Character: FC<{ id: string }> = ({ id }) => {
       return 'rotate-180'
     }
   }, [facing])
+
+  const blockingTimeoutId = useRef(-1)
+  useEffect(() => {
+    if (Date.now() < nextBlock - blockCooldown) {
+      setIsBlocking(true)
+      blockingTimeoutId.current = window.setTimeout(() => {
+        setIsBlocking(false)
+      }, blockCooldown)
+    }
+    return () => {
+      window.clearTimeout(blockingTimeoutId.current)
+    }
+  }, [nextBlock, blockCooldown, setIsBlocking])
 
   return (
     <div
@@ -233,7 +251,7 @@ export const Character: FC<{ id: string }> = ({ id }) => {
           }
         />
       </div>
-      <div className='relative'>{hp}</div>
+      <div className='relative font-mono font-bold'>{hp}</div>
     </div>
   )
 }
