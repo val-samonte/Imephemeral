@@ -1,4 +1,4 @@
-import { atom, useAtom, useSetAtom } from 'jotai'
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
 import { Character, CharacterActionType, charactersAtom } from './Character'
 
@@ -9,6 +9,7 @@ export const roomTotalStepSizeAtom = atom(52)
 export const RoomTest: FC = () => {
   const container = useRef<HTMLDivElement>(null)
   const setWindowSize = useSetAtom(windowSizeAtom)
+  const scaleFactor = useAtomValue(scaleFactorAtom)
   const [character, action] = useAtom(charactersAtom('me'))
 
   useEffect(() => {
@@ -51,6 +52,74 @@ export const RoomTest: FC = () => {
           className='w-full h-full absolute inset-0 select-none pointer-events-none'
         />
         <Character id='me' />
+        <div
+          className='absolute bg-black/80 flex items-center justify-center pointer-events-none'
+          style={{
+            width: `${scaleFactor * 16 * 3}px`,
+            height: `${scaleFactor * 16}px`,
+            top: `${scaleFactor * 16}px`,
+            left: `${scaleFactor * 16 * 5}px`,
+          }}
+        >
+          <img
+            src='/no_entry.png'
+            style={{
+              width: `${scaleFactor * 16}px`,
+              height: `${scaleFactor * 16}px`,
+            }}
+          />
+        </div>
+        <div
+          className='absolute bg-black/80 flex items-center justify-center pointer-events-none'
+          style={{
+            width: `${scaleFactor * 16}px`,
+            height: `${scaleFactor * 16 * 3}px`,
+            right: `${scaleFactor * 16}px`,
+            top: `${scaleFactor * 16 * 5}px`,
+          }}
+        >
+          <img
+            src='/no_entry.png'
+            style={{
+              width: `${scaleFactor * 16}px`,
+              height: `${scaleFactor * 16}px`,
+            }}
+          />
+        </div>
+        <div
+          className='absolute bg-black/80 flex items-center justify-center pointer-events-none'
+          style={{
+            width: `${scaleFactor * 16 * 3}px`,
+            height: `${scaleFactor * 16}px`,
+            bottom: `${scaleFactor * 16}px`,
+            left: `${scaleFactor * 16 * 5}px`,
+          }}
+        >
+          <img
+            src='/no_entry.png'
+            style={{
+              width: `${scaleFactor * 16}px`,
+              height: `${scaleFactor * 16}px`,
+            }}
+          />
+        </div>
+        <div
+          className='absolute bg-black/80 flex items-center justify-center pointer-events-none'
+          style={{
+            width: `${scaleFactor * 16}px`,
+            height: `${scaleFactor * 16 * 3}px`,
+            left: `${scaleFactor * 16}px`,
+            top: `${scaleFactor * 16 * 5}px`,
+          }}
+        >
+          <img
+            src='/no_entry.png'
+            style={{
+              width: `${scaleFactor * 16}px`,
+              height: `${scaleFactor * 16}px`,
+            }}
+          />
+        </div>
       </div>
     </div>
   )
