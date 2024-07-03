@@ -1,6 +1,7 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
-import { Account, sessionAddressAtom } from './Account'
+import { useSessionKeypair } from '../hooks/useSessionKeypair'
+import { Account } from './Account'
 import {
   Character,
   CharacterActionType,
@@ -17,8 +18,10 @@ export const RoomTest: FC = () => {
   const container = useRef<HTMLDivElement>(null)
   const setWindowSize = useSetAtom(windowSizeAtom)
   const scaleFactor = useAtomValue(scaleFactorAtom)
-  const sessionAddress = useAtomValue(sessionAddressAtom)
-  const [character, action] = useAtom(charactersAtom(sessionAddress))
+  const [session] = useSessionKeypair()
+  const [character, action] = useAtom(
+    charactersAtom(session.publicKey.toBase58())
+  )
   const charactersList = useAtomValue(charactersListAtom)
 
   useEffect(() => {
@@ -40,18 +43,19 @@ export const RoomTest: FC = () => {
   return (
     <div
       ref={container}
-      className='fixed inset-0 bg-black flex flex-col items-center justify-center pointer-events-none select-none'
+      className='fixed inset-0 bg-black flex flex-col items-center justify-center select-none'
     >
       <div className='landscape:h-full portrait:w-full aspect-square bg-white relative select-none'>
         <img
           src='/room_test.png'
-          className='w-full h-full absolute inset-0 select-none'
+          className='w-full h-full absolute inset-0 select-none pointer-events-none'
         />
         {charactersList.map((id) => (
           <Character id={id} key={`character_${id}`} />
         ))}
+        {/* <Character id={sessionAddress} /> */}
         <div
-          className='absolute bg-black/80 flex items-center justify-center select-none'
+          className='absolute bg-black/80 flex items-center justify-center select-none pointer-events-none '
           style={{
             width: `${scaleFactor * 16 * 3}px`,
             height: `${scaleFactor * 16}px`,
@@ -68,7 +72,7 @@ export const RoomTest: FC = () => {
           />
         </div>
         <div
-          className='absolute bg-black/80 flex items-center justify-center select-none'
+          className='absolute bg-black/80 flex items-center justify-center select-none pointer-events-none '
           style={{
             width: `${scaleFactor * 16}px`,
             height: `${scaleFactor * 16 * 3}px`,
@@ -85,7 +89,7 @@ export const RoomTest: FC = () => {
           />
         </div>
         <div
-          className='absolute bg-black/80 flex items-center justify-center select-none'
+          className='absolute bg-black/80 flex items-center justify-center select-none pointer-events-none '
           style={{
             width: `${scaleFactor * 16 * 3}px`,
             height: `${scaleFactor * 16}px`,
@@ -102,7 +106,7 @@ export const RoomTest: FC = () => {
           />
         </div>
         <div
-          className='absolute bg-black/80 flex items-center justify-center select-none'
+          className='absolute bg-black/80 flex items-center justify-center select-none pointer-events-none '
           style={{
             width: `${scaleFactor * 16}px`,
             height: `${scaleFactor * 16 * 3}px`,
@@ -119,7 +123,7 @@ export const RoomTest: FC = () => {
           />
         </div>
         <div
-          className='w-full h-full pointer-events-auto select-none'
+          className='w-full h-full select-none'
           onClick={() => {
             if (character.canAttack) {
               action({ type: CharacterActionType.ATTACK })
@@ -131,9 +135,9 @@ export const RoomTest: FC = () => {
               action({ type: CharacterActionType.BLOCK })
             }
           }}
-        ></div>
+        />
       </div>
-      <div className='text-white font-mono font-bold absolute top-0 left-0 p-5'>
+      <div className='text-white font-mono font-bold absolute top-0 left-0 p-5 pointer-events-none'>
         <p>Attack: left click</p>
         <p>Block: right click</p>
         <p>Switch Attack Mode: q</p>
@@ -154,9 +158,8 @@ export const RoomTest: FC = () => {
           />
         </p>
       </div>
-      <div className='absolute bottom-0 right-0 p-5'>
-        <Account />
-      </div>
+
+      <Account />
     </div>
   )
 }

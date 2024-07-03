@@ -69,6 +69,7 @@ export default class Server implements Party.Server {
   characters: Character[] = []
 
   async onStart() {
+    await this.room.storage.deleteAll()
     this.characters =
       (await this.room.storage.get<Character[]>('characters')) ?? []
   }
@@ -77,7 +78,6 @@ export default class Server implements Party.Server {
     console.log(lobby.id)
 
     const token = new URL(request.url).searchParams.get('token') ?? ''
-    console.log(token)
     const [address, signature] = token.split('.')
 
     if (!address) {
@@ -113,7 +113,7 @@ export default class Server implements Party.Server {
     )
   }
 
-  onMessage(message: string, sender: Party.Connection) {
+  async onMessage(message: string, sender: Party.Connection) {
     const now = Date.now()
     const action = JSON.parse(message) as CharacterAction
     const sessionAddress = (sender.state as any)?.sessionAddress
@@ -152,7 +152,7 @@ export default class Server implements Party.Server {
           // isRolling: false,
         }
         this.characters.push(myNewCharacter)
-        this.room.storage.put('characters', this.characters)
+        await this.room.storage.put('characters', this.characters)
 
         // notify everyone for the new character
         this.room.broadcast(
@@ -187,6 +187,7 @@ export default class Server implements Party.Server {
           // check boundary using Math.min and Math.max
           character.x = Math.min(Math.max(action.x, borderLeft), borderRight)
           character.y = Math.min(Math.max(action.y, borderTop), borderBottom)
+          character.nextMove = now + character.moveCooldown
         }
 
         break

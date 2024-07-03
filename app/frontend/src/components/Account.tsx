@@ -1,11 +1,11 @@
 import bs58 from 'bs58'
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { atomWithStorage, useAtomCallback } from 'jotai/utils'
+import { atom, useAtom, useSetAtom } from 'jotai'
+import { useAtomCallback } from 'jotai/utils'
 import PartySocket from 'partysocket'
 import usePartySocket from 'partysocket/react'
 import { useEffect, useMemo, useState } from 'react'
 import { sign } from 'tweetnacl'
-import { Keypair } from '@solana/web3.js'
+import { useSessionKeypair } from '../hooks/useSessionKeypair'
 import {
   Character,
   CharacterActionType,
@@ -13,16 +13,19 @@ import {
   charactersListAtom,
 } from './Character'
 
-export const sessionBaseAtom = atomWithStorage(
-  'session',
-  bs58.encode(Keypair.generate().secretKey)
-)
-export const sessionAtom = atom((get) =>
-  Keypair.fromSecretKey(bs58.decode(get(sessionBaseAtom)))
-)
-export const sessionAddressAtom = atom((get) =>
-  get(sessionAtom).publicKey.toBase58()
-)
+// apply attack hitbox
+// apply damage, damage values (stab, slash)
+
+// remove killed (other server action like "update")
+
+// kill count++
+
+// respawn
+
+// dungeon room assets
+
+// floor generation
+
 export const wsAtom = atom<PartySocket | null>(null)
 
 export type PartykitMessage = {
@@ -31,12 +34,13 @@ export type PartykitMessage = {
 }
 
 export const Account = () => {
-  const session = useAtomValue(sessionAtom)
+  const [session] = useSessionKeypair()
   const setPartySocket = useSetAtom(wsAtom)
   const [charactersList, setCharactersList] = useAtom(charactersListAtom)
   const [connected, setConnected] = useState(false)
+
   const joined = useMemo(
-    () => charactersList.includes(session.publicKey.toBase58()),
+    () => charactersList.includes(session?.publicKey.toBase58() ?? ''),
     [charactersList, session]
   )
 
@@ -53,6 +57,8 @@ export const Account = () => {
     host: 'localhost:1999',
     room: 'imephemerals-test-lobby',
     query: async () => {
+      if (!session) return {}
+
       const signature = bs58.encode(
         sign.detached(session.publicKey.toBuffer(), session.secretKey)
       )
@@ -66,6 +72,7 @@ export const Account = () => {
     },
     onMessage(e) {
       const message = JSON.parse(e.data) as PartykitMessage
+      console.log(message)
       switch (message.type) {
         case 'update': {
           const ids = message.characters.map((c) => {
@@ -105,20 +112,20 @@ export const Account = () => {
 
   if (!joined) {
     return (
-      <div>
-        <button
-          className='px-3 py-2 text-white bg-slate-600 font-mono font-bold pointer-events-auto'
-          onClick={() => {
-            ws.send(
-              JSON.stringify({
-                type: 'JOIN',
-              })
-            )
-          }}
-        >
+      <button
+        className='absolute inset-0 p-5 bg-black/50 flex items-center justify-center pointer-events-auto'
+        onClick={() => {
+          ws.send(
+            JSON.stringify({
+              type: 'JOIN',
+            })
+          )
+        }}
+      >
+        <div className='px-3 py-2 text-white bg-slate-600 font-mono font-bold'>
           Respawn
-        </button>
-      </div>
+        </div>
+      </button>
     )
   }
 

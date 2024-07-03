@@ -1,14 +1,16 @@
 import { useAtom, useAtomValue } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
-import { sessionAddressAtom } from './Account'
+import { useSessionKeypair } from '../hooks/useSessionKeypair'
 import { CharacterActionType, charactersAtom } from './Character'
 import { keypressedAtom } from './Controller'
 import { roomTotalStepSizeAtom } from './RoomTest'
 
 export const GameLoop: FC = () => {
   const totalSteps = useAtomValue(roomTotalStepSizeAtom)
-  const sessionAddress = useAtomValue(sessionAddressAtom)
-  const [character, action] = useAtom(charactersAtom(sessionAddress))
+  const [session] = useSessionKeypair()
+  const [character, action] = useAtom(
+    charactersAtom(session.publicKey.toBase58())
+  )
   const keypressed = useAtomValue(keypressedAtom)
   const borderTop = 8
   const borderRight = totalSteps - 8 - 4

@@ -2,6 +2,7 @@ import cn from 'classnames'
 import { atom, useAtomValue } from 'jotai'
 import { atomFamily } from 'jotai/utils'
 import { FC, useEffect, useMemo, useRef, useState } from 'react'
+import { wsAtom } from './Account'
 import { scaleFactorAtom } from './RoomTest'
 
 export interface CharacterProps {
@@ -74,7 +75,7 @@ export const charactersListAtom = atom<string[]>([])
 export const charactersBaseAtom = atomFamily((_id: string) => {
   const now = Date.now()
   return atom<CharacterProps>({
-    hp: 0,
+    hp: 100,
     maxHp: 100,
     kills: 0,
     // MOVE
@@ -134,47 +135,61 @@ export const charactersAtom = atomFamily((id: string) =>
       }
     },
     (get, set, action: CharacterAction) => {
-      const character = get(charactersBaseAtom(id))
+      const ws = get(wsAtom)
+      const characterId = charactersBaseAtom(id)
+      const character = get(characterId)
       const now = Date.now()
 
       switch (action.type) {
+        case CharacterActionType.BACKEND_UPDATE: {
+          set(characterId, {
+            ...character,
+            ...action.character,
+          })
+          break
+        }
         case CharacterActionType.MOVE: {
-          set(charactersBaseAtom(id), {
+          set(characterId, {
             ...character,
             x: action.x,
             y: action.y,
             facing: action.facing,
             nextMove: now + character.moveCooldown,
           })
+          ws?.send(JSON.stringify(action))
           break
         }
         case CharacterActionType.SWITCH_ATTACK: {
-          set(charactersBaseAtom(id), {
+          set(characterId, {
             ...character,
             attackType: character.attackType === 0 ? 1 : 0,
           })
+          ws?.send(JSON.stringify(action))
           break
         }
         case CharacterActionType.ATTACK: {
-          set(charactersBaseAtom(id), {
+          set(characterId, {
             ...character,
             // attackType: action.type === CharacterActionType.ATTACK ? 1 : 0,
             nextAttack: now + character.attackCooldown,
           })
+          ws?.send(JSON.stringify(action))
           break
         }
         case CharacterActionType.BLOCK: {
-          set(charactersBaseAtom(id), {
+          set(characterId, {
             ...character,
             nextBlock: now + character.blockDuration + character.blockCooldown,
           })
+          ws?.send(JSON.stringify(action))
           break
         }
         case CharacterActionType.ROLL: {
-          set(charactersBaseAtom(id), {
+          set(characterId, {
             ...character,
             nextRoll: now + character.rollDuration + character.rollCooldown,
           })
+          ws?.send(JSON.stringify(action))
           break
         }
       }
@@ -213,6 +228,8 @@ export const Character: FC<{ id: string }> = ({ id }) => {
       window.clearTimeout(blockingTimeoutId.current)
     }
   }, [nextBlock, blockCooldown, setIsBlocking])
+
+  if (hp <= 0) return null
 
   return (
     <div
