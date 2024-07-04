@@ -167,6 +167,8 @@ impl Character {
 
 #[error_code]
 pub enum CharacterError {
+    #[msg("Already joined the room.")]
+    AlreadyInRoom,
     #[msg("The payer is unauthorized to control the character.")]
     PlayerIsNotPayer,
     #[msg("Invalid move direction.")]

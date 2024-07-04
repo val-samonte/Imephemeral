@@ -1,6 +1,7 @@
 use bolt_lang::*;
 use character::Character;
 use character::CharacterError;
+use room::Room;
 
 declare_id!("AiHovHVkz1uDD5omYKQRniPVkvZqkefRHmqgcpQKBrnc");
 
@@ -10,6 +11,7 @@ pub mod attack {
     pub fn execute(ctx: Context<Components>) -> Result<Components> {
         let character = &mut ctx.accounts.character;
         let target = &mut ctx.accounts.target;
+        let room = &mut ctx.accounts.room;
         let payer = ctx.accounts.authority.key();
         let tick = Clock::get()?.slot;
 
@@ -48,6 +50,9 @@ pub mod attack {
 
                 if target.hp == 0 {
                     character.kills = character.kills.saturating_add(1);
+                    // kick target off the room
+                    target.room = Pubkey::default();
+                    room.character_count -= 1;
                 }
             }
         }
@@ -59,6 +64,7 @@ pub mod attack {
     pub struct Components {
         pub character: Character,
         pub target: Character,
+        pub room: Room,
     }
 
 }

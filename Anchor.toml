@@ -4,11 +4,23 @@
 resolution = true
 skip-lint = false
 
+[programs.localnet]
+attack = "AiHovHVkz1uDD5omYKQRniPVkvZqkefRHmqgcpQKBrnc"
+block_attack = "9v8LCR4ELp644ELYd445MwjJB41tnCBL1G3BjHztqbAp"
+character = "9PHmry7gYyYi21sQwpxMQnbsuuenzyupkY4n87t9HzEj"
+create_room = "H76yyofoptTAps98i42ZTfH1M9tYZPgiQRFMFhGVM2wn"
+move_character = "3i3fGAGsbmkGqFxKKtbF3fQEtzCrXXyLpB2Xk5eUShcH"
+room = "7oUS15YgBG1AukRmUPsitnUYNDqRHEyHCDLdNq8gwPdS"
+spawn = "8UbJwevxK4t1za9J2yCoNnKGvf7wamQaLXwbKSifjT3T"
+switch_attack_type = "6nAF6HLVMzJSU76HGwFX9FWxBs75r37ChUX6xeVhYzq2"
+
 [programs.testnet]
 attack = "AiHovHVkz1uDD5omYKQRniPVkvZqkefRHmqgcpQKBrnc"
 block_attack = "9v8LCR4ELp644ELYd445MwjJB41tnCBL1G3BjHztqbAp"
 character = "9PHmry7gYyYi21sQwpxMQnbsuuenzyupkY4n87t9HzEj"
+create_room = "H76yyofoptTAps98i42ZTfH1M9tYZPgiQRFMFhGVM2wn"
 move_character = "3i3fGAGsbmkGqFxKKtbF3fQEtzCrXXyLpB2Xk5eUShcH"
+room = "7oUS15YgBG1AukRmUPsitnUYNDqRHEyHCDLdNq8gwPdS"
 spawn = "8UbJwevxK4t1za9J2yCoNnKGvf7wamQaLXwbKSifjT3T"
 switch_attack_type = "6nAF6HLVMzJSU76HGwFX9FWxBs75r37ChUX6xeVhYzq2"
 
@@ -16,7 +28,7 @@ switch_attack_type = "6nAF6HLVMzJSU76HGwFX9FWxBs75r37ChUX6xeVhYzq2"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Testnet"
+cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [workspace]

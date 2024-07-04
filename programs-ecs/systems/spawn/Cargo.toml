@@ -20,4 +20,5 @@ idl-build = ["anchor-lang/idl-build"]
 bolt-lang = "0.1.7"
 anchor-lang = "0.30.1"
 serde = { version = "1.0", features = ["derive"] }
+room = { path = "../../components/room", features = ["cpi"] }
 character = { path = "../../components/character", features = ["cpi"] }
