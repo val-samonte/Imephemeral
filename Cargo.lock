@@ -3,24 +3,6 @@
 version = 3
 
 [[package]]
-name = "Character"
-version = "0.1.7"
-dependencies = [
- "anchor-lang",
- "bolt-lang",
-]
-
-[[package]]
-name = "Spawn"
-version = "0.1.7"
-dependencies = [
- "Character",
- "anchor-lang",
- "bolt-lang",
- "serde",
-]
-
-[[package]]
 name = "ahash"
 version = "0.7.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -827,6 +809,14 @@ name = "cfg_aliases"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
+
+[[package]]
+name = "character"
+version = "0.1.7"
+dependencies = [
+ "anchor-lang",
+ "bolt-lang",
+]
 
 [[package]]
 name = "console_error_panic_hook"
@@ -1810,6 +1800,16 @@ name = "solana-security-txt"
 version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "468aa43b7edb1f9b7b7b686d5c3aeb6630dc1708e86e31343499dd5c4d775183"
+
+[[package]]
+name = "spawn"
+version = "0.1.7"
+dependencies = [
+ "anchor-lang",
+ "bolt-lang",
+ "character",
+ "serde",
+]
 
 [[package]]
 name = "subtle"

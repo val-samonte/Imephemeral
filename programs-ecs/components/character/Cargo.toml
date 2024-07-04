@@ -1,5 +1,5 @@
 [package]
-name = "Character"
+name = "character"
 version = "0.1.7"
 description = "Created with Bolt"
 edition = "2021"

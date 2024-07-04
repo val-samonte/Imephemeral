@@ -115,6 +115,21 @@ describe('Imephemeral', () => {
     expect(character1Data.y).to.equal(24, 'Default y position is invalid')
   })
 
+  //   | {
+  //     type: CharacterActionType.MOVE
+  //     x: number
+  //     y: number
+  //     facing: number
+  //   }
+  // | {
+  //     type: CharacterActionType.SWITCH_ATTACK
+  //   }
+  // | {
+  //     type: CharacterActionType.ATTACK
+  //   }
+  // | {
+  //     type: CharacterActionType.BLOCK
+
   async function tryApplySystem({
     systemId,
     args,

@@ -5,8 +5,8 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-Character = "F1vWgZHGbB4zJAg4apRDheEoT4VLsKxeF869sd246jQo"
-Spawn = "HXxwtNm4bNgDVEaZtzb4pq8D5CgbcAmDH9p8L6uHdVQx"
+character = "F1vWgZHGbB4zJAg4apRDheEoT4VLsKxeF869sd246jQo"
+spawn = "HXxwtNm4bNgDVEaZtzb4pq8D5CgbcAmDH9p8L6uHdVQx"
 
 [registry]
 url = "https://api.apr.dev"
