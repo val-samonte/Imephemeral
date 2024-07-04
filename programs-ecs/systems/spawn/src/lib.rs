@@ -1,7 +1,7 @@
 use bolt_lang::*;
 use character::Character;
 
-declare_id!("HXxwtNm4bNgDVEaZtzb4pq8D5CgbcAmDH9p8L6uHdVQx");
+declare_id!("8UbJwevxK4t1za9J2yCoNnKGvf7wamQaLXwbKSifjT3T");
 
 #[system]
 pub mod spawn {

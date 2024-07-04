@@ -4,19 +4,19 @@
 resolution = true
 skip-lint = false
 
-[programs.localnet]
+[programs.testnet]
 attack = "AiHovHVkz1uDD5omYKQRniPVkvZqkefRHmqgcpQKBrnc"
 block_attack = "9v8LCR4ELp644ELYd445MwjJB41tnCBL1G3BjHztqbAp"
-character = "F1vWgZHGbB4zJAg4apRDheEoT4VLsKxeF869sd246jQo"
+character = "9PHmry7gYyYi21sQwpxMQnbsuuenzyupkY4n87t9HzEj"
 move_character = "3i3fGAGsbmkGqFxKKtbF3fQEtzCrXXyLpB2Xk5eUShcH"
-spawn = "HXxwtNm4bNgDVEaZtzb4pq8D5CgbcAmDH9p8L6uHdVQx"
+spawn = "8UbJwevxK4t1za9J2yCoNnKGvf7wamQaLXwbKSifjT3T"
 switch_attack_type = "6nAF6HLVMzJSU76HGwFX9FWxBs75r37ChUX6xeVhYzq2"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Testnet"
 wallet = "~/.config/solana/id.json"
 
 [workspace]
