@@ -9,6 +9,15 @@ pub mod move_character {
 
     pub fn execute(ctx: Context<Components>, args: Args) -> Result<Components> {
         let character = &mut ctx.accounts.character;
+        let payer = ctx.accounts.authority.key();
+
+        if character.authority != payer {
+            return Err(CharacterError::PlayerIsNotPayer.into());
+        }
+
+        if character.hp <= 0 {
+            return Err(CharacterError::Dead.into());
+        }
 
         match args.direction {
             0b1000 => character.y = character.y.saturating_sub(1).clamp(8, 40),

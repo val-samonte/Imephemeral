@@ -9,7 +9,12 @@ pub mod block_attack {
 
     pub fn execute(ctx: Context<Components>) -> Result<Components> {
         let character = &mut ctx.accounts.character;
+        let payer = ctx.accounts.authority.key();
         let tick = Clock::get()?.slot;
+
+        if character.authority != payer {
+            return Err(CharacterError::PlayerIsNotPayer.into());
+        }
 
         if character.hp <= 0 {
             return Err(CharacterError::Dead.into());
