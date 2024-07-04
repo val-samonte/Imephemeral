@@ -138,7 +138,6 @@ export const charactersAtom = atomFamily((id: string) =>
       const ws = get(wsAtom)
       const characterAtom = charactersBaseAtom(id)
       const character = get(characterAtom)
-      const now = Date.now()
 
       switch (action.type) {
         case CharacterActionType.BACKEND_UPDATE: {

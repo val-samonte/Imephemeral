@@ -55,7 +55,7 @@ export const Account = () => {
   // connect to lobby
 
   const ws = usePartySocket({
-    host: 'localhost:1999',
+    host: 'https://imephemeral.val-samonte.partykit.dev', // 'localhost:1999',
     room: 'imephemerals-test-lobby',
     query: async () => {
       if (!session) return {}
@@ -73,7 +73,6 @@ export const Account = () => {
     },
     onMessage(e) {
       const message = JSON.parse(e.data) as PartykitMessage
-      console.log(message)
       switch (message.type) {
         case 'update': {
           const ids = (message?.characters ?? []).map((c) => {

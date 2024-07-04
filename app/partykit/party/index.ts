@@ -78,7 +78,6 @@ export default class Server implements Party.Server {
   characters: Character[] = []
 
   async onStart() {
-    await this.room.storage.deleteAll()
     this.characters =
       (await this.room.storage.get<Character[]>('characters')) ?? []
   }
@@ -160,7 +159,7 @@ export default class Server implements Party.Server {
           // BLOCK
           blockCooldown: 1000,
           blockDuration: 1000,
-          nextBlock: now,
+          nextBlock: now + 2000,
           canBlock: false,
           // isBlocking: false,
           // ROLL
@@ -240,9 +239,9 @@ export default class Server implements Party.Server {
                   : character.stabDamage) + character.baseDamage
               if (target.hp <= 0) {
                 character.kills++
-                console.log('KILL!', character.id, target.id)
+                // console.log('KILL!', character.id, target.id)
               } else {
-                console.log('HIT!', character.id, target.id)
+                // console.log('HIT!', character.id, target.id)
               }
               affectedCharacters.push(target)
             }
@@ -297,8 +296,9 @@ function getAttackBox(character: Character) {
     character.attackType === 0 ? character.slashRange : character.stabRange
 
   const orientation = (character.facing | 0b1010) === 0b1010 // facing top or bottom
-  w = orientation ? w : h
-  h = orientation ? h : w
+  if (!orientation) {
+    ;[w, h] = [h, w]
+  }
 
   // make a default box and based it on the character's current position
 

@@ -1,6 +1,6 @@
 {
   "$schema": "https://www.partykit.io/schema.json",
-  "name": "partykit-party",
+  "name": "imephemeral",
   "main": "party/index.ts",
   "compatibilityDate": "2024-07-02"
 }
