@@ -63,3 +63,9 @@ impl Default for Character {
         })
     }
 }
+
+#[error_code]
+pub enum CharacterError {
+    #[msg("The character move distance should be exactly 1 and should be facing the correct direction.")]
+    InvalidMove,
+}

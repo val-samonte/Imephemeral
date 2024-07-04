@@ -6,6 +6,7 @@ skip-lint = false
 
 [programs.localnet]
 character = "F1vWgZHGbB4zJAg4apRDheEoT4VLsKxeF869sd246jQo"
+move_character = "3i3fGAGsbmkGqFxKKtbF3fQEtzCrXXyLpB2Xk5eUShcH"
 spawn = "HXxwtNm4bNgDVEaZtzb4pq8D5CgbcAmDH9p8L6uHdVQx"
 
 [registry]

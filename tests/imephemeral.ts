@@ -13,6 +13,7 @@ import {
 } from '@magicblock-labs/bolt-sdk'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { Character } from '../target/types/character'
+import { MoveCharacter } from '../target/types/move_character'
 import { Spawn } from '../target/types/spawn'
 
 interface ApplySystemComponent {
@@ -39,6 +40,7 @@ describe('Imephemeral', () => {
 
   const characterComponent = workspace.Character as Program<Character>
   const systemSpawn = workspace.Spawn as Program<Spawn>
+  const systemMove = workspace.MoveCharacter as Program<MoveCharacter>
 
   it('InitializeNewWorld', async () => {
     const initializeNewWorld = await InitializeNewWorld({
@@ -115,12 +117,31 @@ describe('Imephemeral', () => {
     expect(character1Data.y).to.equal(24, 'Default y position is invalid')
   })
 
-  //   | {
-  //     type: CharacterActionType.MOVE
-  //     x: number
-  //     y: number
-  //     facing: number
-  //   }
+  it('Move the character', async () => {
+    await tryApplySystem({
+      systemId: systemMove.programId,
+      args: {
+        x: 23,
+        y: 24,
+        facing: 0b0001,
+      },
+      entities: [
+        {
+          entity: entityPda1,
+          components: [
+            {
+              componentId: characterComponent.programId,
+            },
+          ],
+        },
+      ],
+    })
+    const character1Data = await characterComponent.account.character.fetch(
+      characterPda1
+    )
+    expect(character1Data.x).to.equal(23, 'New x position is invalid')
+  })
+
   // | {
   //     type: CharacterActionType.SWITCH_ATTACK
   //   }
