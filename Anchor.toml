@@ -5,7 +5,8 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-imephemeral = "5FBt7iEmZoUMg1bfRnMGHncm3XtbhbvPjctoPWxRtbiW"
+Character = "F1vWgZHGbB4zJAg4apRDheEoT4VLsKxeF869sd246jQo"
+Spawn = "HXxwtNm4bNgDVEaZtzb4pq8D5CgbcAmDH9p8L6uHdVQx"
 
 [registry]
 url = "https://api.apr.dev"
@@ -15,7 +16,7 @@ cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [workspace]
-members = ["programs/*", "programs-ecs/components/*", "programs-ecs/systems/*"]
+members = ["programs-ecs/components/*", "programs-ecs/systems/*"]
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

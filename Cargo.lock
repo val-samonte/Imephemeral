@@ -3,6 +3,24 @@
 version = 3
 
 [[package]]
+name = "Character"
+version = "0.1.7"
+dependencies = [
+ "anchor-lang",
+ "bolt-lang",
+]
+
+[[package]]
+name = "Spawn"
+version = "0.1.7"
+dependencies = [
+ "Character",
+ "anchor-lang",
+ "bolt-lang",
+ "serde",
+]
+
+[[package]]
 name = "ahash"
 version = "0.7.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1089,14 +1107,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "imephemeral"
-version = "0.1.7"
-dependencies = [
- "anchor-lang",
- "bolt-lang",
-]
-
-[[package]]
 name = "indexmap"
 version = "2.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1261,16 +1271,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "movement"
-version = "0.1.7"
-dependencies = [
- "anchor-lang",
- "bolt-lang",
- "position",
- "serde",
-]
-
-[[package]]
 name = "num-bigint"
 version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1357,14 +1357,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "216eaa586a190f0a738f2f918511eecfa90f13295abec0e457cdebcceda80cbd"
 dependencies = [
  "crypto-mac",
-]
-
-[[package]]
-name = "position"
-version = "0.1.7"
-dependencies = [
- "anchor-lang",
- "bolt-lang",
 ]
 
 [[package]]

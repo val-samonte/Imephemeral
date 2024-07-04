@@ -1,6 +1,5 @@
 [workspace]
 members = [
-    "programs/*",
     "programs-ecs/components/*",
     "programs-ecs/systems/*"
 ]
