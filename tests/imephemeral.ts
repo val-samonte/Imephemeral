@@ -1,4 +1,4 @@
-import { expect } from 'chai'
+import { assert, expect } from 'chai'
 import {
   AnchorProvider,
   Program,
@@ -37,9 +37,6 @@ describe('Imephemeral', () => {
   let entityPda1: PublicKey
   let characterPda1: PublicKey
 
-  let entityPda2: PublicKey
-  let characterPda2: PublicKey
-
   const characterComponent = workspace.Character as Program<Character>
   const systemSpawn = workspace.Spawn as Program<Spawn>
 
@@ -70,20 +67,7 @@ describe('Imephemeral', () => {
     )
   })
 
-  it('Add Entity 2', async () => {
-    const addEntity = await AddEntity({
-      payer: provider.wallet.publicKey,
-      world: worldPda,
-      connection: provider.connection,
-    })
-    const signature = await provider.sendAndConfirm(addEntity.transaction)
-    entityPda2 = addEntity.entityPda
-    console.log(
-      `Initialized Entity 2 (ID=${addEntity.entityPda}). Initialization signature: ${signature}`
-    )
-  })
-
-  it('Spawn the first character', async () => {
+  it('Initialize the first characterPda', async () => {
     const initializeComponent = await InitializeComponent({
       payer: provider.wallet.publicKey,
       entity: entityPda1,
@@ -95,21 +79,23 @@ describe('Imephemeral', () => {
 
     characterPda1 = initializeComponent.componentPda
     console.log(
-      `Initialized the character component 1. Initialization signature: ${signature}`
+      `Initialized the character component 1 ${characterPda1}. Initialization signature: ${signature}`
     )
+  })
 
-    // Todo - account not initialized
+  it('Spawn the 1st character to the room', async () => {
     await tryApplySystem({
       systemId: systemSpawn.programId,
       args: {
-        room: roomPda,
+        // todo: figure out how to pass Pubkeys
+        room: Array.from(roomPda.toBytes()),
       },
       entities: [
         {
           entity: entityPda1,
           components: [
             {
-              componentId: characterPda1,
+              componentId: characterComponent.programId,
             },
           ],
         },
@@ -120,30 +106,13 @@ describe('Imephemeral', () => {
       characterPda1
     )
 
-    expect(
-      character1Data.authority.equals(provider.wallet.publicKey)
-    ).to.be.true('Authority is invalid')
-    expect(character1Data.room.equals(roomPda)).to.be.true('Invalid room')
+    assert(
+      character1Data.authority.equals(provider.wallet.publicKey),
+      'Authority is invalid'
+    )
+    assert(character1Data.room.equals(roomPda), 'Room is invalid')
     expect(character1Data.x).to.equal(24, 'Default x position is invalid')
     expect(character1Data.y).to.equal(24, 'Default y position is invalid')
-
-    console.log(`Character 1 data: ${JSON.stringify(character1Data)}`)
-  })
-
-  it('Spawn the second character', async () => {
-    const initializeComponent = await InitializeComponent({
-      payer: provider.wallet.publicKey,
-      entity: entityPda1,
-      componentId: characterComponent.programId,
-    })
-    const signature = await provider.sendAndConfirm(
-      initializeComponent.transaction
-    )
-
-    characterPda1 = initializeComponent.componentPda
-    console.log(
-      `Initialized the character component 2. Initialization signature: ${signature}`
-    )
   })
 
   async function tryApplySystem({
@@ -161,7 +130,7 @@ describe('Imephemeral', () => {
       authority: provider.wallet.publicKey,
       systemId,
       entities,
-      args: args,
+      args,
     })
     let success = true
     try {

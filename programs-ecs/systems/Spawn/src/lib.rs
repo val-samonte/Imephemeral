@@ -8,7 +8,7 @@ pub mod spawn {
 
     pub fn execute(ctx: Context<Components>, args: Args) -> Result<Components> {
         let character = &mut ctx.accounts.character;
-        character.room = args.room.key();
+        character.room = Pubkey::new_from_array(args.room);
         character.authority = ctx.accounts.authority.key();
         Ok(ctx.accounts)
     }
@@ -20,6 +20,6 @@ pub mod spawn {
 
     #[arguments]
     struct Args {
-        room: Pubkey,
+        room: [u8; 32],
     }
 }
