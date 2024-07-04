@@ -28,10 +28,15 @@ import {
 
 export const wsAtom = atom<PartySocket | null>(null)
 
-export type PartykitMessage = {
-  type: 'update'
-  characters: Character[]
-}
+export type PartykitMessage =
+  | {
+      type: 'update'
+      characters: Character[]
+    }
+  | {
+      type: 'remove'
+      characterIds: string[]
+    }
 
 export const Account = () => {
   const [session] = useSessionKeypair()
@@ -75,16 +80,26 @@ export const Account = () => {
       console.log(message)
       switch (message.type) {
         case 'update': {
-          const ids = message.characters.map((c) => {
-            handleUpdate(c)
-            return c.id
-          })
+          const ids = message.characters
+            .filter((c) => !!c.id)
+            .map((c) => {
+              handleUpdate(c)
+              return c.id
+            })
 
           setCharactersList((list) => {
             const newList = new Set(list)
             ids.forEach((id) => newList.add(id))
             return Array.from(newList)
           })
+          break
+        }
+        case 'remove': {
+          const ids = message.characterIds
+          setCharactersList((list) => {
+            return list.filter((id) => !ids.includes(id))
+          })
+          break
         }
       }
     },
@@ -108,7 +123,11 @@ export const Account = () => {
   }, [ws, setPartySocket])
 
   if (!connected)
-    return <div className='text-white font-mono font-bold'>Connecting...</div>
+    return (
+      <div className='absolute inset-0 p-5 bg-black/50 flex items-center justify-center pointer-events-none'>
+        <div className='text-white font-mono font-bold'>Connecting...</div>
+      </div>
+    )
 
   if (!joined) {
     return (

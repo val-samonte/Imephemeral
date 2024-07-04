@@ -19,6 +19,15 @@ interface Character {
   nextAttack: number
   canAttack: boolean
   attackType: number // 0: slash, 1: stab
+
+  baseDamage: number
+  stabDamage: number
+  slashDamage: number
+
+  slashRange: number
+  slashWide: number
+  stabRange: number
+  stabWide: number
   // BLOCK
   blockCooldown: number
   blockDuration: number
@@ -138,6 +147,15 @@ export default class Server implements Party.Server {
           nextAttack: now,
           canAttack: false,
           attackType: 0,
+          baseDamage: 20,
+          stabDamage: 4,
+          slashDamage: 6,
+
+          slashRange: 2,
+          slashWide: 6,
+          stabRange: 4,
+          stabWide: 2,
+
           // BLOCK
           blockCooldown: 1000,
           blockDuration: 1000,
@@ -166,6 +184,8 @@ export default class Server implements Party.Server {
     }
 
     if (!character) return
+
+    const affectedCharacters = [character]
 
     switch (action.type) {
       case CharacterActionType.MOVE: {
@@ -199,6 +219,33 @@ export default class Server implements Party.Server {
       case CharacterActionType.ATTACK: {
         if (!canAttack(character)) break
         character.nextAttack = now + character.attackCooldown
+
+        const attackBox = getAttackBox(character)
+
+        this.characters = this.characters.map((target) => {
+          const isBlocking = now < target.nextBlock - target.blockCooldown
+          if (!isBlocking && target.hp > 0 && target.id !== character.id) {
+            const hit = collisionCheck(attackBox, [
+              target.x,
+              target.y,
+              target.x + 4,
+              target.y + 4,
+            ])
+            if (hit) {
+              console.log('HIT!', character.id, target.id)
+              target.hp -=
+                character.attackType === 0
+                  ? character.slashDamage
+                  : character.stabDamage
+              if (target.hp <= 0) {
+                character.kills++
+              }
+              affectedCharacters.push(target)
+            }
+          }
+          return target
+        })
+
         break
       }
       case CharacterActionType.BLOCK: {
@@ -213,22 +260,111 @@ export default class Server implements Party.Server {
       }
     }
 
-    // update list
-    this.characters = this.characters.map((c) => {
-      if (c.id === character.id) {
-        return character
-      }
-      return c
-    })
-    this.room.storage.put('characters', this.characters)
+    // const affectedCharacters = this.characters.filter(
+    //   (c) => affectedCharacterIds.includes(c.id) && c.hp > 0
+    // )
 
-    // broadcast changes
     this.room.broadcast(
       JSON.stringify({
         type: 'update',
-        characters: [character],
+        characters: [affectedCharacters],
       })
     )
+
+    const deadCharacterIds = this.characters
+      .filter((c) => c.hp <= 0)
+      .map((c) => c.id)
+    if (deadCharacterIds.length > 0) {
+      this.room.broadcast(
+        JSON.stringify({
+          type: 'remove',
+          characterIds: deadCharacterIds,
+        })
+      )
+    }
+
+    await this.room.storage.put(
+      'characters',
+      this.characters.filter((c) => c.hp > 0)
+    )
+  }
+}
+
+function getAttackBox(character: Character) {
+  let w = character.attackType === 0 ? character.slashWide : character.stabWide
+  let h =
+    character.attackType === 0 ? character.slashRange : character.stabRange
+
+  const orientation = (character.facing | 0b1010) === 0b1010 // facing top or bottom
+  w = orientation ? w : h
+  h = orientation ? h : w
+
+  // make a default box and based it on the character's current position
+
+  let [b1x, b1y, b2x, b2y] = [
+    character.x,
+    character.y,
+    character.x + w,
+    character.y + h,
+  ]
+
+  // character size is 4x4
+  if (orientation) {
+    // center the box to the character by width
+    b1x += 2 - w / 2
+    b2x += 2 - w / 2
+  } else {
+    // center the box to the character by height
+    b1y += 2 - h / 2
+    b2y += 2 - h / 2
+  }
+
+  // move the box based on the character's facing
+  if (character.facing & 0b0001) {
+    b1x -= w
+    b2x -= w
+  } else if (character.facing & 0b0010) {
+    b1y += 4
+    b2y += 4
+  } else if (character.facing & 0b0100) {
+    b1x += 4
+    b2x += 4
+  } else if (character.facing & 0b1000) {
+    b1y -= h
+    b2y -= h
+  }
+
+  return [b1x, b1y, b2x, b2y]
+}
+
+function collisionCheck(box1: number[], box2: number[]) {
+  // Extract points from the rectangles
+  const [x1, y1, x2, y2] = box1
+  const [x3, y3, x4, y4] = box2
+
+  // Calculate the left, right, top, and bottom edges of each rectangle
+  const left1 = Math.min(x1, x2)
+  const right1 = Math.max(x1, x2)
+  const top1 = Math.min(y1, y2)
+  const bottom1 = Math.max(y1, y2)
+
+  const left2 = Math.min(x3, x4)
+  const right2 = Math.max(x3, x4)
+  const top2 = Math.min(y3, y4)
+  const bottom2 = Math.max(y3, y4)
+
+  // Check if the rectangles overlap
+  if (
+    right1 <= left2 ||
+    right2 <= left1 ||
+    bottom1 <= top2 ||
+    bottom2 <= top1
+  ) {
+    // They are touching or not overlapping
+    return false
+  } else {
+    // They are overlapping
+    return true
   }
 }
 

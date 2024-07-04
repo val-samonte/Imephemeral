@@ -197,7 +197,7 @@ export const charactersAtom = atomFamily((id: string) =>
   )
 )
 
-export const Character: FC<{ id: string }> = ({ id }) => {
+export const Character: FC<{ id: string; me?: boolean }> = ({ id, me }) => {
   const { x, y, facing, nextAttack, attackType, nextBlock, blockCooldown, hp } =
     useAtomValue(charactersAtom(id))
   const scaleFactor = useAtomValue(scaleFactorAtom)
@@ -234,7 +234,8 @@ export const Character: FC<{ id: string }> = ({ id }) => {
   return (
     <div
       className={cn(
-        'absolute flex items-center justify-center transition-all duration-100 linear'
+        'absolute flex items-center justify-center transition-all duration-100 linear',
+        'pointer-events-none'
       )}
       style={{
         width: `${size}px`,
@@ -245,7 +246,8 @@ export const Character: FC<{ id: string }> = ({ id }) => {
     >
       <div
         className={cn(
-          'bg-blue-400 absolute inset-0 flex items-center justify-center',
+          me ? 'bg-blue-400' : 'bg-pink-400',
+          ' absolute inset-0 flex items-center justify-center',
           isBlocking && 'border-4 border-blue-800 border-solid',
           facingClassname
         )}
@@ -280,7 +282,7 @@ export const Character: FC<{ id: string }> = ({ id }) => {
           }
         />
       </div>
-      <div className='relative font-mono font-bold'>{hp}</div>
+      <div className='font-mono font-bold relative'>{hp}</div>
     </div>
   )
 }

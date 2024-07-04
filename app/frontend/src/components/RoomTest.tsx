@@ -1,5 +1,5 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useMemo, useRef } from 'react'
 import { useSessionKeypair } from '../hooks/useSessionKeypair'
 import { Account } from './Account'
 import {
@@ -19,9 +19,9 @@ export const RoomTest: FC = () => {
   const setWindowSize = useSetAtom(windowSizeAtom)
   const scaleFactor = useAtomValue(scaleFactorAtom)
   const [session] = useSessionKeypair()
-  const [character, action] = useAtom(
-    charactersAtom(session.publicKey.toBase58())
-  )
+  const characterId = useMemo(() => session?.publicKey.toBase58(), [session])
+
+  const [character, action] = useAtom(charactersAtom(characterId))
   const charactersList = useAtomValue(charactersListAtom)
 
   useEffect(() => {
@@ -51,9 +51,8 @@ export const RoomTest: FC = () => {
           className='w-full h-full absolute inset-0 select-none pointer-events-none'
         />
         {charactersList.map((id) => (
-          <Character id={id} key={`character_${id}`} />
+          <Character id={id} key={`character_${id}`} me={id === characterId} />
         ))}
-        {/* <Character id={sessionAddress} /> */}
         <div
           className='absolute bg-black/80 flex items-center justify-center select-none pointer-events-none '
           style={{
