@@ -118,6 +118,7 @@ export default class Server implements Party.Server {
       JSON.stringify({
         type: 'update',
         characters: this.characters,
+        connected: true,
       })
     )
   }
@@ -170,7 +171,6 @@ export default class Server implements Party.Server {
           // isRolling: false,
         }
         this.characters.push(myNewCharacter)
-        await this.room.storage.put('characters', this.characters)
 
         // notify everyone for the new character
         this.room.broadcast(
@@ -179,7 +179,9 @@ export default class Server implements Party.Server {
             characters: [myNewCharacter],
           })
         )
+        this.room.storage.put('characters', this.characters)
       }
+
       return
     }
 
@@ -222,7 +224,7 @@ export default class Server implements Party.Server {
 
         const attackBox = getAttackBox(character)
 
-        this.characters = this.characters.map((target) => {
+        this.characters.forEach((target) => {
           const isBlocking = now < target.nextBlock - target.blockCooldown
           if (!isBlocking && target.hp > 0 && target.id !== character.id) {
             const hit = collisionCheck(attackBox, [
@@ -232,13 +234,15 @@ export default class Server implements Party.Server {
               target.y + 4,
             ])
             if (hit) {
-              console.log('HIT!', character.id, target.id)
               target.hp -=
-                character.attackType === 0
+                (character.attackType === 0
                   ? character.slashDamage
-                  : character.stabDamage
+                  : character.stabDamage) + character.baseDamage
               if (target.hp <= 0) {
                 character.kills++
+                console.log('KILL!', character.id, target.id)
+              } else {
+                console.log('HIT!', character.id, target.id)
               }
               affectedCharacters.push(target)
             }
@@ -260,30 +264,27 @@ export default class Server implements Party.Server {
       }
     }
 
-    // const affectedCharacters = this.characters.filter(
-    //   (c) => affectedCharacterIds.includes(c.id) && c.hp > 0
-    // )
+    const deadCharacterIds = affectedCharacters
+      .filter((c) => c.hp <= 0)
+      .map((c) => c.id)
+
+    // apply changes
+    this.characters = this.characters
+      .filter((c) => c.hp > 0)
+      .map((c) => {
+        return affectedCharacters.find((ac) => ac.id === c.id) ?? c
+      })
 
     this.room.broadcast(
       JSON.stringify({
         type: 'update',
-        characters: [affectedCharacters],
+        characters: affectedCharacters.filter((c) => c.hp > 0),
+        remove: deadCharacterIds.length > 0 ? deadCharacterIds : undefined,
+        fromAction: action.type,
       })
     )
 
-    const deadCharacterIds = this.characters
-      .filter((c) => c.hp <= 0)
-      .map((c) => c.id)
-    if (deadCharacterIds.length > 0) {
-      this.room.broadcast(
-        JSON.stringify({
-          type: 'remove',
-          characterIds: deadCharacterIds,
-        })
-      )
-    }
-
-    await this.room.storage.put(
+    this.room.storage.put(
       'characters',
       this.characters.filter((c) => c.hp > 0)
     )

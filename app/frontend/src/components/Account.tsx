@@ -28,15 +28,11 @@ import {
 
 export const wsAtom = atom<PartySocket | null>(null)
 
-export type PartykitMessage =
-  | {
-      type: 'update'
-      characters: Character[]
-    }
-  | {
-      type: 'remove'
-      characterIds: string[]
-    }
+export type PartykitMessage = {
+  type: 'update'
+  characters?: Character[]
+  remove: string[]
+}
 
 export const Account = () => {
   const [session] = useSessionKeypair()
@@ -80,24 +76,18 @@ export const Account = () => {
       console.log(message)
       switch (message.type) {
         case 'update': {
-          const ids = message.characters
-            .filter((c) => !!c.id)
-            .map((c) => {
-              handleUpdate(c)
-              return c.id
-            })
+          const ids = (message?.characters ?? []).map((c) => {
+            handleUpdate(c)
+            return c.id
+          })
 
           setCharactersList((list) => {
             const newList = new Set(list)
             ids.forEach((id) => newList.add(id))
+            if (message.remove) {
+              message.remove.forEach((id) => newList.delete(id))
+            }
             return Array.from(newList)
-          })
-          break
-        }
-        case 'remove': {
-          const ids = message.characterIds
-          setCharactersList((list) => {
-            return list.filter((id) => !ids.includes(id))
           })
           break
         }

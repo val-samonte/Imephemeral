@@ -50,9 +50,11 @@ export const RoomTest: FC = () => {
           src='/room_test.png'
           className='w-full h-full absolute inset-0 select-none pointer-events-none'
         />
+
         {charactersList.map((id) => (
           <Character id={id} key={`character_${id}`} me={id === characterId} />
         ))}
+
         <div
           className='absolute bg-black/80 flex items-center justify-center select-none pointer-events-none '
           style={{

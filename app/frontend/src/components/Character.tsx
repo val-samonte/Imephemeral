@@ -136,59 +136,59 @@ export const charactersAtom = atomFamily((id: string) =>
     },
     (get, set, action: CharacterAction) => {
       const ws = get(wsAtom)
-      const characterId = charactersBaseAtom(id)
-      const character = get(characterId)
+      const characterAtom = charactersBaseAtom(id)
+      const character = get(characterAtom)
       const now = Date.now()
 
       switch (action.type) {
         case CharacterActionType.BACKEND_UPDATE: {
-          set(characterId, {
+          set(characterAtom, {
             ...character,
             ...action.character,
           })
           break
         }
         case CharacterActionType.MOVE: {
-          set(characterId, {
-            ...character,
-            x: action.x,
-            y: action.y,
-            facing: action.facing,
-            nextMove: now + character.moveCooldown,
-          })
-          ws?.send(JSON.stringify(action))
+          // set(characterAtom, {
+          //   ...character,
+          //   x: action.x,
+          //   y: action.y,
+          //   facing: action.facing,
+          //   nextMove: now + character.moveCooldown,
+          // })
+          character.canMove && ws?.send(JSON.stringify(action))
           break
         }
         case CharacterActionType.SWITCH_ATTACK: {
-          set(characterId, {
-            ...character,
-            attackType: character.attackType === 0 ? 1 : 0,
-          })
+          // set(characterAtom, {
+          //   ...character,
+          //   attackType: character.attackType === 0 ? 1 : 0,
+          // })
           ws?.send(JSON.stringify(action))
           break
         }
         case CharacterActionType.ATTACK: {
-          set(characterId, {
-            ...character,
-            // attackType: action.type === CharacterActionType.ATTACK ? 1 : 0,
-            nextAttack: now + character.attackCooldown,
-          })
+          // set(characterAtom, {
+          //   ...character,
+          //   // attackType: action.type === CharacterActionType.ATTACK ? 1 : 0,
+          //   nextAttack: now + character.attackCooldown,
+          // })
           ws?.send(JSON.stringify(action))
           break
         }
         case CharacterActionType.BLOCK: {
-          set(characterId, {
-            ...character,
-            nextBlock: now + character.blockDuration + character.blockCooldown,
-          })
+          // set(characterAtom, {
+          //   ...character,
+          //   nextBlock: now + character.blockDuration + character.blockCooldown,
+          // })
           ws?.send(JSON.stringify(action))
           break
         }
         case CharacterActionType.ROLL: {
-          set(characterId, {
-            ...character,
-            nextRoll: now + character.rollDuration + character.rollCooldown,
-          })
+          // set(characterAtom, {
+          //   ...character,
+          //   nextRoll: now + character.rollDuration + character.rollCooldown,
+          // })
           ws?.send(JSON.stringify(action))
           break
         }
