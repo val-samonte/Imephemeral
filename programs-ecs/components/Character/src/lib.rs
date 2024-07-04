@@ -42,8 +42,8 @@ impl Default for Character {
             hp: 100,
             max_hp: 100,
             kills: 0,
-            x: 0,
-            y: 0,
+            x: 24,
+            y: 24,
             facing: 0,
             move_cooldown: 100, // milliseconds
             next_move: 0,
