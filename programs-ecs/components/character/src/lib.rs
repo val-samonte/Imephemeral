@@ -1,6 +1,6 @@
 use bolt_lang::*;
 
-declare_id!("9PHmry7gYyYi21sQwpxMQnbsuuenzyupkY4n87t9HzEj");
+declare_id!("38bFbdTvfcYzXA8v2jmCb4y3qpiyMSbg2f6Zk4E1yQwV");
 
 #[component]
 pub struct Character {

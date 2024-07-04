@@ -2,7 +2,7 @@ use bolt_lang::*;
 use room::Room;
 use room::RoomError;
 
-declare_id!("H76yyofoptTAps98i42ZTfH1M9tYZPgiQRFMFhGVM2wn");
+declare_id!("5unwDiZx5CesRy4BW42jFyBAeg3qqSAk3R2vNgsg83se");
 
 #[system]
 pub mod create_room {
@@ -17,6 +17,7 @@ pub mod create_room {
         room.depth = 0;
         room.seed = 0;
         room.character_count = 0;
+        room.initialized = true;
         Ok(ctx.accounts)
     }
 

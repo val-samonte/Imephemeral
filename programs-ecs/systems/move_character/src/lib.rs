@@ -2,7 +2,7 @@ use bolt_lang::*;
 use character::Character;
 use character::CharacterError;
 
-declare_id!("3i3fGAGsbmkGqFxKKtbF3fQEtzCrXXyLpB2Xk5eUShcH");
+declare_id!("Emr1nmjo96yEHNJrcFCF6eEhddhvsdY2woNTJFZMEBkU");
 
 #[system]
 pub mod move_character {

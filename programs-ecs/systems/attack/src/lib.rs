@@ -3,7 +3,7 @@ use character::Character;
 use character::CharacterError;
 use room::Room;
 
-declare_id!("AiHovHVkz1uDD5omYKQRniPVkvZqkefRHmqgcpQKBrnc");
+declare_id!("71PwZ3SAgUPY6jDZYMLRNJsAh98Pz48EWq6pAHsLtF6i");
 
 #[system]
 pub mod attack {

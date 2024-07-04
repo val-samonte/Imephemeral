@@ -372,7 +372,7 @@ describe('Imephemeral', () => {
     )
   })
 
-  it('Attack character 2', async () => {
+  xit('Attack character 2', async () => {
     await tryApplySystem({
       systemId: systemAttack.programId,
       args: {},

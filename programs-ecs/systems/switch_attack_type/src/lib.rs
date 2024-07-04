@@ -2,7 +2,7 @@ use bolt_lang::*;
 use character::Character;
 use character::CharacterError;
 
-declare_id!("6nAF6HLVMzJSU76HGwFX9FWxBs75r37ChUX6xeVhYzq2");
+declare_id!("4vQKQW8wVAEFQrMmAb5mDPkzMzpRLywc15gWJWgNDgKi");
 
 #[system]
 pub mod switch_attack_type {

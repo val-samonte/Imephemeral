@@ -4,7 +4,7 @@ use character::CharacterError;
 use room::Room;
 use room::RoomError;
 
-declare_id!("8UbJwevxK4t1za9J2yCoNnKGvf7wamQaLXwbKSifjT3T");
+declare_id!("G7nyjrAKgXJup6aGfi4Zh5RSgwi6nTVTWfxRH7q6p178");
 
 #[system]
 pub mod spawn {
