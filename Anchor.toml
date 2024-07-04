@@ -8,6 +8,7 @@ skip-lint = false
 character = "F1vWgZHGbB4zJAg4apRDheEoT4VLsKxeF869sd246jQo"
 move_character = "3i3fGAGsbmkGqFxKKtbF3fQEtzCrXXyLpB2Xk5eUShcH"
 spawn = "HXxwtNm4bNgDVEaZtzb4pq8D5CgbcAmDH9p8L6uHdVQx"
+switch_attack_type = "6nAF6HLVMzJSU76HGwFX9FWxBs75r37ChUX6xeVhYzq2"
 
 [registry]
 url = "https://api.apr.dev"

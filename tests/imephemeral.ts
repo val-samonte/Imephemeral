@@ -15,6 +15,7 @@ import { Keypair, PublicKey } from '@solana/web3.js'
 import { Character } from '../target/types/character'
 import { MoveCharacter } from '../target/types/move_character'
 import { Spawn } from '../target/types/spawn'
+import { SwitchAttackType } from '../target/types/switch_attack_type'
 
 interface ApplySystemComponent {
   componentId: PublicKey
@@ -41,6 +42,8 @@ describe('Imephemeral', () => {
   const characterComponent = workspace.Character as Program<Character>
   const systemSpawn = workspace.Spawn as Program<Spawn>
   const systemMove = workspace.MoveCharacter as Program<MoveCharacter>
+  const systemSwitchAttackType =
+    workspace.SwitchAttackType as Program<SwitchAttackType>
 
   it('InitializeNewWorld', async () => {
     const initializeNewWorld = await InitializeNewWorld({
@@ -121,9 +124,7 @@ describe('Imephemeral', () => {
     await tryApplySystem({
       systemId: systemMove.programId,
       args: {
-        x: 23,
-        y: 24,
-        facing: 0b0001,
+        direction: 0b0001,
       },
       entities: [
         {
@@ -142,9 +143,29 @@ describe('Imephemeral', () => {
     expect(character1Data.x).to.equal(23, 'New x position is invalid')
   })
 
-  // | {
-  //     type: CharacterActionType.SWITCH_ATTACK
-  //   }
+  it('Switch attack type the character', async () => {
+    await tryApplySystem({
+      systemId: systemSwitchAttackType.programId,
+      args: {
+        attack_type: 1,
+      },
+      entities: [
+        {
+          entity: entityPda1,
+          components: [
+            {
+              componentId: characterComponent.programId,
+            },
+          ],
+        },
+      ],
+    })
+    const character1Data = await characterComponent.account.character.fetch(
+      characterPda1
+    )
+    expect(character1Data.attackType).to.equal(1, 'Attack type is invalid')
+  })
+
   // | {
   //     type: CharacterActionType.ATTACK
   //   }
