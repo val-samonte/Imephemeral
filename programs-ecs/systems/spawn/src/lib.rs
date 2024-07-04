@@ -10,6 +10,9 @@ pub mod spawn {
         let character = &mut ctx.accounts.character;
         character.room = Pubkey::new_from_array(args.room);
         character.authority = ctx.accounts.authority.key();
+
+        character.reset();
+
         Ok(ctx.accounts)
     }
 

@@ -21,7 +21,7 @@ pub mod attack {
             return Err(CharacterError::Dead.into());
         }
 
-        if tick < character.next_block - character.block_cooldown {
+        if tick < character.next_block.saturating_sub(character.block_cooldown) {
             return Err(CharacterError::AttackWhileBlocking.into());
         }
 
@@ -31,9 +31,10 @@ pub mod attack {
 
         character.next_attack = tick + character.attack_cooldown;
 
-        let target_is_blocking = tick < target.next_block - target.block_cooldown;
+        let target_same_room = character.room == target.room;
+        let target_is_blocking = tick < target.next_block.saturating_sub(target.block_cooldown);
 
-        if !target_is_blocking && target.hp > 0 {
+        if target_same_room && !target_is_blocking && target.hp > 0 {
             let hit = target.collision_check( character.get_attack_box() );
 
             if hit {

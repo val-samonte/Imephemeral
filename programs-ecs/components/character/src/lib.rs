@@ -146,6 +146,23 @@ impl Character {
             true
         }
     }
+
+    pub fn reset(&mut self) {
+        self.hp = 100;
+        self.max_hp = 100;
+        self.kills = 0;
+        self.x = 24;
+        self.y = 24;
+        self.facing = 0;
+        self.next_move = 0;
+        self.attack_type = 0;
+        self.next_attack = 0;
+        self.next_block = 0;
+        self.move_cooldown = 1;
+        self.attack_cooldown = 3;
+        self.block_cooldown = 3;
+        self.block_duration = 2;
+    }
 }
 
 #[error_code]

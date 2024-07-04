@@ -12,6 +12,7 @@ import {
   InitializeNewWorld,
 } from '@magicblock-labs/bolt-sdk'
 import { Keypair, PublicKey } from '@solana/web3.js'
+import { Attack } from '../target/types/attack'
 import { BlockAttack } from '../target/types/block_attack'
 import { Character } from '../target/types/character'
 import { MoveCharacter } from '../target/types/move_character'
@@ -40,12 +41,16 @@ describe('Imephemeral', () => {
   let entityPda1: PublicKey
   let characterPda1: PublicKey
 
+  let entityPda2: PublicKey
+  let characterPda2: PublicKey
+
   const characterComponent = workspace.Character as Program<Character>
   const systemSpawn = workspace.Spawn as Program<Spawn>
   const systemMove = workspace.MoveCharacter as Program<MoveCharacter>
   const systemSwitchAttackType =
     workspace.SwitchAttackType as Program<SwitchAttackType>
   const systemBlockAttack = workspace.BlockAttack as Program<BlockAttack>
+  const systemAttack = workspace.Attack as Program<Attack>
 
   it('InitializeNewWorld', async () => {
     const initializeNewWorld = await InitializeNewWorld({
@@ -196,9 +201,148 @@ describe('Imephemeral', () => {
     )
   })
 
-  // | {
-  //     type: CharacterActionType.ATTACK
-  //   }
+  it('Create and Spawn another character', async () => {
+    const addEntity = await AddEntity({
+      payer: provider.wallet.publicKey,
+      world: worldPda,
+      connection: provider.connection,
+    })
+
+    const signature = await provider.sendAndConfirm(addEntity.transaction)
+    entityPda2 = addEntity.entityPda
+    console.log(
+      `Initialized Entity 2 (ID=${addEntity.entityPda}). Initialization signature: ${signature}`
+    )
+
+    const initializeComponent = await InitializeComponent({
+      payer: provider.wallet.publicKey,
+      entity: entityPda2,
+      componentId: characterComponent.programId,
+    })
+    const signature2 = await provider.sendAndConfirm(
+      initializeComponent.transaction
+    )
+
+    characterPda2 = initializeComponent.componentPda
+    console.log(
+      `Initialized the character component 2 ${characterPda2}. Initialization signature: ${signature2}`
+    )
+
+    await tryApplySystem({
+      systemId: systemSpawn.programId,
+      args: {
+        room: Array.from(roomPda.toBytes()),
+      },
+      entities: [
+        {
+          entity: entityPda2,
+          components: [
+            {
+              componentId: characterComponent.programId,
+            },
+          ],
+        },
+      ],
+    })
+  })
+
+  it('Move character 1 to prepare an attack', async () => {
+    await tryApplySystem({
+      systemId: systemMove.programId,
+      args: {
+        direction: 0b0001,
+      },
+      entities: [
+        {
+          entity: entityPda1,
+          components: [
+            {
+              componentId: characterComponent.programId,
+            },
+          ],
+        },
+      ],
+    })
+    await tryApplySystem({
+      systemId: systemMove.programId,
+      args: {
+        direction: 0b0001,
+      },
+      entities: [
+        {
+          entity: entityPda1,
+          components: [
+            {
+              componentId: characterComponent.programId,
+            },
+          ],
+        },
+      ],
+    })
+    await tryApplySystem({
+      systemId: systemMove.programId,
+      args: {
+        direction: 0b0100,
+      },
+      entities: [
+        {
+          entity: entityPda1,
+          components: [
+            {
+              componentId: characterComponent.programId,
+            },
+          ],
+        },
+      ],
+    })
+
+    // check position
+    const character1Data = await characterComponent.account.character.fetch(
+      characterPda1
+    )
+
+    expect(character1Data.x).to.equal(22, 'New x position is invalid')
+    expect(character1Data.facing).to.equal(
+      0b0100,
+      'Character is not facing to the correct direction'
+    )
+  })
+
+  it('Attack character 2', async () => {
+    await tryApplySystem({
+      systemId: systemAttack.programId,
+      args: {},
+      entities: [
+        {
+          entity: entityPda1,
+          components: [
+            {
+              componentId: characterComponent.programId,
+            },
+          ],
+        },
+        {
+          entity: entityPda2,
+          components: [
+            {
+              componentId: characterComponent.programId,
+            },
+          ],
+        },
+      ],
+    })
+
+    // check health
+    const character2Data = await characterComponent.account.character.fetch(
+      characterPda2
+    )
+
+    expect(character2Data.hp).to.equal(76, 'Health is invalid')
+  })
+
+  function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
 
   async function tryApplySystem({
     systemId,
