@@ -429,6 +429,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "block_attack"
+version = "0.1.7"
+dependencies = [
+ "anchor-lang",
+ "bolt-lang",
+ "character",
+ "serde",
+]
+
+[[package]]
 name = "bolt-attribute-bolt-arguments"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"

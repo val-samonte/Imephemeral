@@ -5,6 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
+block_attack = "9v8LCR4ELp644ELYd445MwjJB41tnCBL1G3BjHztqbAp"
 character = "F1vWgZHGbB4zJAg4apRDheEoT4VLsKxeF869sd246jQo"
 move_character = "3i3fGAGsbmkGqFxKKtbF3fQEtzCrXXyLpB2Xk5eUShcH"
 spawn = "HXxwtNm4bNgDVEaZtzb4pq8D5CgbcAmDH9p8L6uHdVQx"

@@ -12,6 +12,7 @@ import {
   InitializeNewWorld,
 } from '@magicblock-labs/bolt-sdk'
 import { Keypair, PublicKey } from '@solana/web3.js'
+import { BlockAttack } from '../target/types/block_attack'
 import { Character } from '../target/types/character'
 import { MoveCharacter } from '../target/types/move_character'
 import { Spawn } from '../target/types/spawn'
@@ -44,6 +45,7 @@ describe('Imephemeral', () => {
   const systemMove = workspace.MoveCharacter as Program<MoveCharacter>
   const systemSwitchAttackType =
     workspace.SwitchAttackType as Program<SwitchAttackType>
+  const systemBlockAttack = workspace.BlockAttack as Program<BlockAttack>
 
   it('InitializeNewWorld', async () => {
     const initializeNewWorld = await InitializeNewWorld({
@@ -166,11 +168,37 @@ describe('Imephemeral', () => {
     expect(character1Data.attackType).to.equal(1, 'Attack type is invalid')
   })
 
+  it('Block attack', async () => {
+    const previousData = await characterComponent.account.character.fetch(
+      characterPda1
+    )
+    await tryApplySystem({
+      systemId: systemBlockAttack.programId,
+      args: {},
+      entities: [
+        {
+          entity: entityPda1,
+          components: [
+            {
+              componentId: characterComponent.programId,
+            },
+          ],
+        },
+      ],
+    })
+
+    const character1Data = await characterComponent.account.character.fetch(
+      characterPda1
+    )
+    expect(character1Data.nextBlock).to.not.equal(
+      previousData.nextBlock,
+      'Attack type is invalid'
+    )
+  })
+
   // | {
   //     type: CharacterActionType.ATTACK
   //   }
-  // | {
-  //     type: CharacterActionType.BLOCK
 
   async function tryApplySystem({
     systemId,

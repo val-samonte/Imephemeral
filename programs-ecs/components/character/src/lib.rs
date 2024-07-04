@@ -68,6 +68,10 @@ impl Default for Character {
 
 #[error_code]
 pub enum CharacterError {
-    #[msg("The character move distance should be exactly 1 and should be facing the correct direction.")]
+    #[msg("Invalid move direction.")]
     InvalidMove,
+    #[msg("The character is dead.")]
+    Dead,
+    #[msg("Block is currently in cooldown.")]
+    BlockCooldown,
 }
