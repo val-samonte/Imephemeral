@@ -1,5 +1,6 @@
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
+import { characterEntityPdaAtom } from '../atoms/characterPdaAtom'
 import { LockIndicators } from './LockIndicators'
 
 export const windowSizeAtom = atom(1)
@@ -10,6 +11,7 @@ export const Room: FC = () => {
   const container = useRef<HTMLDivElement>(null)
   const setWindowSize = useSetAtom(windowSizeAtom)
   const scaleFactor = useAtomValue(scaleFactorAtom)
+  const characterEntityPda = useAtomValue(characterEntityPdaAtom)
 
   useEffect(() => {
     const resize = () => {
@@ -26,6 +28,11 @@ export const Room: FC = () => {
       window.removeEventListener('resize', resize)
     }
   }, [setWindowSize])
+
+  useEffect(() => {
+    // todo:
+    // listen to character entity's component PDA
+  }, [characterEntityPda])
 
   return (
     <div

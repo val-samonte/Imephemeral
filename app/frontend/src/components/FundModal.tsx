@@ -1,6 +1,6 @@
 import { useAtom, useAtomValue } from 'jotai'
 import { useEffect, useRef, useState } from 'react'
-import { characterPdaAtom } from '../atoms/characterPdaAtom'
+import { characterEntityPdaAtom } from '../atoms/characterPdaAtom'
 import { createCharacter } from '../engine/createCharacter'
 import { magicBlockEngineAtom } from '../engine/MagicBlockEngineWrapper'
 import { systemSpawn } from '../engine/systemSpawn'
@@ -9,7 +9,7 @@ export const FundModal = () => {
   const engine = useAtomValue(magicBlockEngineAtom)
   const sessionPayer = engine?.getSessionPayer()
   const [sessionLamports, setSessionLamports] = useState<number | null>(null)
-  const [characterPda, setCharacterPda] = useAtom(characterPdaAtom)
+  const [characterPda, setCharacterPda] = useAtom(characterEntityPdaAtom)
   const [errorCreating, setErrorCreating] = useState('')
   const isCreatingPda = useRef(false)
 

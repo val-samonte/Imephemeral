@@ -35,7 +35,7 @@ export const createCharacter = async (engine: MagicBlockEngine) => {
 
   const characterPda = initializeComponent.componentPda
 
-  console.log(`Initialized the character component 2 ${characterPda}.`)
+  console.log(`Initialized the character component ${characterPda}.`)
 
-  return characterPda
+  return entityPda
 }

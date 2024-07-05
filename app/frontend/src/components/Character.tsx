@@ -197,8 +197,17 @@ export const charactersAtom = atomFamily((id: string) =>
 )
 
 export const Character: FC<{ id: string; me?: boolean }> = ({ id, me }) => {
-  const { x, y, facing, nextAttack, attackType, nextBlock, blockCooldown, hp } =
-    useAtomValue(charactersAtom(id))
+  const {
+    x,
+    y,
+    facing,
+    nextAttack,
+    attackType,
+    nextBlock,
+    blockCooldown,
+    hp,
+    maxHp,
+  } = useAtomValue(charactersAtom(id))
   const scaleFactor = useAtomValue(scaleFactorAtom)
   const size = useMemo(() => 16 * scaleFactor, [scaleFactor])
   const [isBlocking, setIsBlocking] = useState(false)
@@ -230,10 +239,14 @@ export const Character: FC<{ id: string; me?: boolean }> = ({ id, me }) => {
 
   if (hp <= 0) return null
 
+  const spriteFace =
+    { [0b1000]: 0, [0b0100]: 1, [0b0010]: 2, [0b0001]: 3 }[facing] ?? 0
+  const spriteFeet = (facing & 0b1010 ? y % 2 : x % 2) - 1 - (me ? 0 : 2)
+
   return (
     <div
       className={cn(
-        'absolute flex items-center justify-center transition-all duration-100 linear',
+        'absolute flex items-center justify-center transition-all duration-100 ease-linear',
         'pointer-events-none'
       )}
       style={{
@@ -244,21 +257,36 @@ export const Character: FC<{ id: string; me?: boolean }> = ({ id, me }) => {
       }}
     >
       <div
+        className='overflow-hidden relative'
+        style={{
+          width: `${size.toFixed(1)}px`,
+          height: `${size.toFixed(1)}px`,
+        }}
+      >
+        <div
+          className='absolute'
+          style={{
+            width: `${size * 4}px`,
+            height: `${size * 4}px`,
+          }}
+        >
+          <img
+            className='absolute'
+            src='/character.png'
+            style={{
+              top: `${size * -spriteFace}px`,
+              left: `${size * spriteFeet}px`,
+            }}
+          />
+        </div>
+      </div>
+      <div
         className={cn(
-          me ? 'bg-blue-400' : 'bg-pink-400',
-          ' absolute inset-0 flex items-center justify-center',
+          'absolute inset-0 flex items-center justify-center',
           isBlocking && 'border-4 border-blue-800 border-solid',
           facingClassname
         )}
       >
-        <div
-          className='ml-10 bg-white'
-          style={{
-            marginLeft: `${size * 0.5}px`,
-            width: `${size * 0.2}px`,
-            height: `${size * 0.2}px`,
-          }}
-        />
         <div
           className='absolute animate-fadeOut'
           key={`attack_${nextAttack}`}
@@ -281,7 +309,22 @@ export const Character: FC<{ id: string; me?: boolean }> = ({ id, me }) => {
           }
         />
       </div>
-      <div className='font-mono font-bold relative'>{hp}</div>
+      <div
+        className='absolute bg-green-950'
+        style={{
+          width: `${size}px`,
+          height: `${size / 10}px`,
+          bottom: `${size * -0.125}px`,
+        }}
+      >
+        <div
+          className='bg-green-500'
+          style={{
+            width: `${(hp / maxHp) * size}px`,
+            height: '100%',
+          }}
+        />
+      </div>
     </div>
   )
 }
