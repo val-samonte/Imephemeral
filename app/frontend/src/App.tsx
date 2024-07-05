@@ -1,3 +1,4 @@
+import { InitializeRoom } from './components/InitializeRoom'
 import { MagicBlockEngineWrapper } from './engine/MagicBlockEngineWrapper'
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
         </div>
       }
     >
-      <div>Connected</div>
+      <InitializeRoom />
     </MagicBlockEngineWrapper>
   )
 }

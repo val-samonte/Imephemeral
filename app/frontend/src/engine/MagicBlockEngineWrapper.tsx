@@ -22,6 +22,8 @@ export const MagicBlockEngineWrapper: FC<{
           maxLamports: SESSION_MAX_LAMPORTS,
         })
       )
+    } else {
+      setMagicBlockEngine(null)
     }
   }, [walletContext, session, setMagicBlockEngine])
 
