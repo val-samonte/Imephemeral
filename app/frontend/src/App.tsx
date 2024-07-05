@@ -13,6 +13,7 @@ function App() {
     >
       <Room />
       <FundModal />
+      {/* <InitializeRoom /> */}
     </MagicBlockEngineWrapper>
   )
 }

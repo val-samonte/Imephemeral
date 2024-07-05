@@ -3,13 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 import { characterPdaAtom } from '../atoms/characterPdaAtom'
 import { createCharacter } from '../engine/createCharacter'
 import { magicBlockEngineAtom } from '../engine/MagicBlockEngineWrapper'
+import { systemSpawn } from '../engine/systemSpawn'
 
 export const FundModal = () => {
   const engine = useAtomValue(magicBlockEngineAtom)
   const sessionPayer = engine?.getSessionPayer()
   const [sessionLamports, setSessionLamports] = useState<number | null>(null)
   const [characterPda, setCharacterPda] = useAtom(characterPdaAtom)
-  const [errorCreating, setErrorCreating] = useState(false)
+  const [errorCreating, setErrorCreating] = useState('')
   const isCreatingPda = useRef(false)
 
   useEffect(() => {
@@ -27,18 +28,18 @@ export const FundModal = () => {
     if (!characterPda && sessionLamports >= engine.getSessionMinLamports()) {
       if (isCreatingPda.current) return
       isCreatingPda.current = true
-      try {
-        const create = async () => {
+      const create = async () => {
+        try {
           const pda = await createCharacter(engine)
-          console.log(pda.toBase58())
+          await systemSpawn(engine, pda)
           setCharacterPda(pda)
+        } catch (error) {
+          console.error(error)
+          isCreatingPda.current = false
+          setErrorCreating((error + '').replace('Error:', '').trim())
         }
-        create()
-      } catch (error) {
-        console.error(error)
-        isCreatingPda.current = false
-        setErrorCreating(true)
       }
+      create()
     }
   }, [
     engine,
@@ -57,10 +58,21 @@ export const FundModal = () => {
     return (
       <div className='bg-black/80 fixed h-screen inset-x-0 top-0 flex items-center justify-center'>
         <div className='bg-black/60 flex flex-col border-2 border-amber-500/20 p-5 gap-3 max-w-md'>
-          <p>There was an error creating your character.</p>
+          <p>
+            There was an{' '}
+            <a
+              className='underline'
+              href={`https://solana.fm/tx/${errorCreating}?cluster=testnet-solana`}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              error
+            </a>{' '}
+            creating your character.
+          </p>
           <button
             onClick={() => {
-              setErrorCreating(false)
+              setErrorCreating('')
             }}
             className='border-2 border-amber-500 bg-slate-800 hover:bg-slate-700 px-5 py-2'
           >
@@ -91,7 +103,7 @@ export const FundModal = () => {
     <div className='bg-black/80 fixed h-screen inset-x-0 top-0 flex items-center justify-center'>
       <div className='bg-black/60 flex flex-col border-2 border-amber-500/20 p-5 gap-3 max-w-md'>
         <h2 className='text-2xl'>Welcome to Imephemerals</h2>
-        <p>Let's start by funding your session wallet first</p>
+        <p>Let's start by funding your session wallet first.</p>
         <button
           onClick={() => {
             engine.fundSession()

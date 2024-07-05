@@ -118,13 +118,18 @@ export class MagicBlockEngine {
       [this.sessionKey],
       { skipPreflight: true }
     )
-    await this.waitSignatureConfirmation(
-      name,
-      signature,
-      connectionChain,
-      commitment ?? 'finalized'
-    )
-    return signature
+    try {
+      await this.waitSignatureConfirmation(
+        name,
+        signature,
+        connectionChain,
+        commitment ?? 'finalized'
+      )
+      return signature
+    } catch (e) {
+      console.error(e)
+      throw new Error(signature)
+    }
   }
 
   async processSessionEphemeralTransaction(
@@ -137,13 +142,18 @@ export class MagicBlockEngine {
       [this.sessionKey],
       { skipPreflight: true }
     )
-    await this.waitSignatureConfirmation(
-      name,
-      signature,
-      connectionEphemeral,
-      'finalized'
-    )
-    return signature
+    try {
+      await this.waitSignatureConfirmation(
+        name,
+        signature,
+        connectionEphemeral,
+        'finalized'
+      )
+      return signature
+    } catch (e) {
+      console.error(e)
+      throw new Error(signature)
+    }
   }
 
   async waitSignatureConfirmation(
