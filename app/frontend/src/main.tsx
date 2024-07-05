@@ -4,9 +4,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import App from './App.tsx'
+import { InitializeRoom } from './components/InitializeRoom.tsx'
 import { PartykitVersion } from './components/PartykitVersion.tsx'
 import { Splash } from './components/Splash.tsx'
 import { WalletAdapter } from './components/WalletAdapter.tsx'
+import { MagicBlockEngineWrapper } from './engine/MagicBlockEngineWrapper.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -15,6 +17,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path='/partykit' element={<PartykitVersion />} />
           <Route path='/on-chain' element={<App />} />
+          <Route
+            path='/generateroom'
+            element={
+              <MagicBlockEngineWrapper>
+                <InitializeRoom />
+              </MagicBlockEngineWrapper>
+            }
+          />
           <Route path='/' element={<Splash />} />
         </Routes>
       </Router>

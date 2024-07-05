@@ -1,5 +1,5 @@
 {
-  "address": "Gsq6EAXs7298CJnfNRWsiydbYcKHuPBEesNiKzDGXDcX",
+  "address": "8eoFAxiRrAh5RPPuDNyJT6CdJRQLHbs2ntzJRHZ2dsfb",
   "metadata": {
     "name": "room",
     "version": "0.1.7",
@@ -7,6 +7,95 @@
     "description": "Created with Bolt"
   },
   "instructions": [
+    {
+      "name": "allow_undelegation",
+      "discriminator": [
+        255,
+        66,
+        82,
+        208,
+        247,
+        5,
+        210,
+        126
+      ],
+      "accounts": [
+        {
+          "name": "base_account"
+        },
+        {
+          "name": "delegation_record"
+        },
+        {
+          "name": "delegation_metadata",
+          "writable": true
+        },
+        {
+          "name": "buffer"
+        },
+        {
+          "name": "delegation_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "delegate",
+      "discriminator": [
+        90,
+        147,
+        75,
+        178,
+        85,
+        88,
+        4,
+        137
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "signer": true
+        },
+        {
+          "name": "entity"
+        },
+        {
+          "name": "account",
+          "writable": true
+        },
+        {
+          "name": "owner_program"
+        },
+        {
+          "name": "buffer",
+          "writable": true
+        },
+        {
+          "name": "delegation_record",
+          "writable": true
+        },
+        {
+          "name": "delegate_account_seeds",
+          "writable": true
+        },
+        {
+          "name": "delegation_program"
+        },
+        {
+          "name": "system_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "valid_until",
+          "type": "i64"
+        },
+        {
+          "name": "commit_frequency_ms",
+          "type": "u32"
+        }
+      ]
+    },
     {
       "name": "initialize",
       "discriminator": [
@@ -45,6 +134,43 @@
         }
       ],
       "args": []
+    },
+    {
+      "name": "process_undelegation",
+      "discriminator": [
+        196,
+        28,
+        41,
+        206,
+        48,
+        37,
+        51,
+        167
+      ],
+      "accounts": [
+        {
+          "name": "base_account",
+          "writable": true
+        },
+        {
+          "name": "buffer"
+        },
+        {
+          "name": "payer",
+          "writable": true
+        },
+        {
+          "name": "system_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "account_seeds",
+          "type": {
+            "vec": "bytes"
+          }
+        }
+      ]
     },
     {
       "name": "update",

@@ -1,8 +1,8 @@
 use bolt_lang::*;
 
-declare_id!("Gsq6EAXs7298CJnfNRWsiydbYcKHuPBEesNiKzDGXDcX");
+declare_id!("8eoFAxiRrAh5RPPuDNyJT6CdJRQLHbs2ntzJRHZ2dsfb");
 
-#[component]
+#[component(delegate)]
 #[derive(Default)]
 pub struct Room {
     pub floor: Pubkey,

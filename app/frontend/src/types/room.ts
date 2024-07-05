@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/room.json`.
  */
 export type Room = {
-  "address": "Gsq6EAXs7298CJnfNRWsiydbYcKHuPBEesNiKzDGXDcX",
+  "address": "8eoFAxiRrAh5RPPuDNyJT6CdJRQLHbs2ntzJRHZ2dsfb",
   "metadata": {
     "name": "room",
     "version": "0.1.7",
@@ -13,6 +13,95 @@ export type Room = {
     "description": "Created with Bolt"
   },
   "instructions": [
+    {
+      "name": "allowUndelegation",
+      "discriminator": [
+        255,
+        66,
+        82,
+        208,
+        247,
+        5,
+        210,
+        126
+      ],
+      "accounts": [
+        {
+          "name": "baseAccount"
+        },
+        {
+          "name": "delegationRecord"
+        },
+        {
+          "name": "delegationMetadata",
+          "writable": true
+        },
+        {
+          "name": "buffer"
+        },
+        {
+          "name": "delegationProgram"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "delegate",
+      "discriminator": [
+        90,
+        147,
+        75,
+        178,
+        85,
+        88,
+        4,
+        137
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "signer": true
+        },
+        {
+          "name": "entity"
+        },
+        {
+          "name": "account",
+          "writable": true
+        },
+        {
+          "name": "ownerProgram"
+        },
+        {
+          "name": "buffer",
+          "writable": true
+        },
+        {
+          "name": "delegationRecord",
+          "writable": true
+        },
+        {
+          "name": "delegateAccountSeeds",
+          "writable": true
+        },
+        {
+          "name": "delegationProgram"
+        },
+        {
+          "name": "systemProgram"
+        }
+      ],
+      "args": [
+        {
+          "name": "validUntil",
+          "type": "i64"
+        },
+        {
+          "name": "commitFrequencyMs",
+          "type": "u32"
+        }
+      ]
+    },
     {
       "name": "initialize",
       "discriminator": [
@@ -51,6 +140,43 @@ export type Room = {
         }
       ],
       "args": []
+    },
+    {
+      "name": "processUndelegation",
+      "discriminator": [
+        196,
+        28,
+        41,
+        206,
+        48,
+        37,
+        51,
+        167
+      ],
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "writable": true
+        },
+        {
+          "name": "buffer"
+        },
+        {
+          "name": "payer",
+          "writable": true
+        },
+        {
+          "name": "systemProgram"
+        }
+      ],
+      "args": [
+        {
+          "name": "accountSeeds",
+          "type": {
+            "vec": "bytes"
+          }
+        }
+      ]
     },
     {
       "name": "update",

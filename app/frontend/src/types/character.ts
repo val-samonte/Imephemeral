@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/character.json`.
  */
 export type Character = {
-  "address": "38bFbdTvfcYzXA8v2jmCb4y3qpiyMSbg2f6Zk4E1yQwV",
+  "address": "HxkYZ6hAFhVpjEMtLDfYwDmMUCu5ctzB4hLG2bjCH1sB",
   "metadata": {
     "name": "character",
     "version": "0.1.7",
@@ -13,6 +13,95 @@ export type Character = {
     "description": "Created with Bolt"
   },
   "instructions": [
+    {
+      "name": "allowUndelegation",
+      "discriminator": [
+        255,
+        66,
+        82,
+        208,
+        247,
+        5,
+        210,
+        126
+      ],
+      "accounts": [
+        {
+          "name": "baseAccount"
+        },
+        {
+          "name": "delegationRecord"
+        },
+        {
+          "name": "delegationMetadata",
+          "writable": true
+        },
+        {
+          "name": "buffer"
+        },
+        {
+          "name": "delegationProgram"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "delegate",
+      "discriminator": [
+        90,
+        147,
+        75,
+        178,
+        85,
+        88,
+        4,
+        137
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "signer": true
+        },
+        {
+          "name": "entity"
+        },
+        {
+          "name": "account",
+          "writable": true
+        },
+        {
+          "name": "ownerProgram"
+        },
+        {
+          "name": "buffer",
+          "writable": true
+        },
+        {
+          "name": "delegationRecord",
+          "writable": true
+        },
+        {
+          "name": "delegateAccountSeeds",
+          "writable": true
+        },
+        {
+          "name": "delegationProgram"
+        },
+        {
+          "name": "systemProgram"
+        }
+      ],
+      "args": [
+        {
+          "name": "validUntil",
+          "type": "i64"
+        },
+        {
+          "name": "commitFrequencyMs",
+          "type": "u32"
+        }
+      ]
+    },
     {
       "name": "initialize",
       "discriminator": [
@@ -51,6 +140,43 @@ export type Character = {
         }
       ],
       "args": []
+    },
+    {
+      "name": "processUndelegation",
+      "discriminator": [
+        196,
+        28,
+        41,
+        206,
+        48,
+        37,
+        51,
+        167
+      ],
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "writable": true
+        },
+        {
+          "name": "buffer"
+        },
+        {
+          "name": "payer",
+          "writable": true
+        },
+        {
+          "name": "systemProgram"
+        }
+      ],
+      "args": [
+        {
+          "name": "accountSeeds",
+          "type": {
+            "vec": "bytes"
+          }
+        }
+      ]
     },
     {
       "name": "update",

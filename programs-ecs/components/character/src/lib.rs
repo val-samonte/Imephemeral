@@ -1,8 +1,8 @@
 use bolt_lang::*;
 
-declare_id!("38bFbdTvfcYzXA8v2jmCb4y3qpiyMSbg2f6Zk4E1yQwV");
+declare_id!("HxkYZ6hAFhVpjEMtLDfYwDmMUCu5ctzB4hLG2bjCH1sB");
 
-#[component]
+#[component(delegate)]
 pub struct Character {
     pub room: Pubkey,
     pub authority: Pubkey,
