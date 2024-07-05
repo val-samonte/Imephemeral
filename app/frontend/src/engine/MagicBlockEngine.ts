@@ -2,7 +2,13 @@ import { Idl, Program } from '@coral-xyz/anchor'
 import { WalletName } from '@solana/wallet-adapter-base'
 import { WalletContextState } from '@solana/wallet-adapter-react'
 import {
-  AccountInfo, Commitment, Connection, Keypair, PublicKey, SystemProgram, Transaction
+  AccountInfo,
+  Commitment,
+  Connection,
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  Transaction,
 } from '@solana/web3.js'
 
 // const ENDPOINT_CHAIN_RPC = "https://api.devnet.solana.com";
@@ -17,7 +23,7 @@ const ENDPOINT_CHAIN_WS = 'wss://api.testnet.solana.com'
 const ENDPOINT_EPHEMERAL_RPC = 'https://testnet.magicblock.app'
 const ENDPOINT_EPHEMERAL_WS = 'wss://testnet.magicblock.app:8900'
 
-const SESSION_LOCAL_STORAGE = 'magicblock-session-key'
+// const SESSION_LOCAL_STORAGE = 'magicblock-session-key'
 export const SESSION_MIN_LAMPORTS = 0.02 * 1_000_000_000
 export const SESSION_MAX_LAMPORTS = 0.05 * 1_000_000_000
 
@@ -76,7 +82,7 @@ export class MagicBlockEngine {
     return this.walletContext.connecting
   }
 
-  getWalletPayer(): PublicKey {
+  getWalletPayer(): PublicKey | null {
     return this.walletContext.publicKey
   }
 
@@ -167,7 +173,11 @@ export class MagicBlockEngine {
     const accountInfo = await connectionChain.getAccountInfo(
       this.getSessionPayer()
     )
-    if (!accountInfo || accountInfo.lamports < this.sessionConfig.minLamports) {
+    const walletPayer = this.getWalletPayer()
+    if (
+      walletPayer &&
+      (!accountInfo || accountInfo.lamports < this.sessionConfig.minLamports)
+    ) {
       const existingLamports = accountInfo?.lamports ?? 0
       const missingLamports = this.sessionConfig.maxLamports - existingLamports
       console.log('fundSession.existingLamports', existingLamports)
@@ -176,7 +186,7 @@ export class MagicBlockEngine {
         'FundSession',
         new Transaction().add(
           SystemProgram.transfer({
-            fromPubkey: this.getWalletPayer(),
+            fromPubkey: walletPayer,
             toPubkey: this.getSessionPayer(),
             lamports: missingLamports,
           })
@@ -189,7 +199,8 @@ export class MagicBlockEngine {
     const accountInfo = await connectionChain.getAccountInfo(
       this.getSessionPayer()
     )
-    if (accountInfo && accountInfo.lamports > 0) {
+    const walletPayer = this.getWalletPayer()
+    if (walletPayer && accountInfo && accountInfo.lamports > 0) {
       const transferableLamports =
         accountInfo.lamports - TRANSACTION_COST_LAMPORTS
       await this.processSessionChainTransaction(
@@ -197,7 +208,7 @@ export class MagicBlockEngine {
         new Transaction().add(
           SystemProgram.transfer({
             fromPubkey: this.getSessionPayer(),
-            toPubkey: this.getWalletPayer(),
+            toPubkey: walletPayer,
             lamports: transferableLamports,
           })
         )

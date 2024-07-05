@@ -19,7 +19,7 @@ import {
 // you do not need this
 
 export const InitializeRoom: FC = () => {
-  const { publicKey, disconnect, signMessage } = useWallet()
+  const { publicKey, disconnect } = useWallet()
   const { setVisible } = useWalletModal()
   const engine = useAtomValue(magicBlockEngineAtom)
 

@@ -1,0 +1,179 @@
+{
+  "address": "4vQKQW8wVAEFQrMmAb5mDPkzMzpRLywc15gWJWgNDgKi",
+  "metadata": {
+    "name": "switch_attack_type",
+    "version": "0.1.7",
+    "spec": "0.1.0",
+    "description": "Created with Bolt"
+  },
+  "instructions": [
+    {
+      "name": "execute",
+      "discriminator": [
+        130,
+        221,
+        242,
+        154,
+        13,
+        193,
+        189,
+        29
+      ],
+      "accounts": [
+        {
+          "name": "character"
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "_args",
+          "type": "bytes"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Character",
+      "discriminator": [
+        140,
+        115,
+        165,
+        36,
+        241,
+        153,
+        102,
+        84
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "BoltMetadata",
+      "docs": [
+        "Metadata for the component."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Character",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "room",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "hp",
+            "type": "u8"
+          },
+          {
+            "name": "max_hp",
+            "type": "u8"
+          },
+          {
+            "name": "kills",
+            "type": "u16"
+          },
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          },
+          {
+            "name": "facing",
+            "type": "u8"
+          },
+          {
+            "name": "next_move",
+            "type": "u64"
+          },
+          {
+            "name": "attack_type",
+            "type": "u8"
+          },
+          {
+            "name": "next_attack",
+            "type": "u64"
+          },
+          {
+            "name": "base_damage",
+            "type": "u8"
+          },
+          {
+            "name": "slash_damage",
+            "type": "u8"
+          },
+          {
+            "name": "slash_range",
+            "type": "u8"
+          },
+          {
+            "name": "slash_wide",
+            "type": "u8"
+          },
+          {
+            "name": "stab_damage",
+            "type": "u8"
+          },
+          {
+            "name": "stab_range",
+            "type": "u8"
+          },
+          {
+            "name": "stab_wide",
+            "type": "u8"
+          },
+          {
+            "name": "next_block",
+            "type": "u64"
+          },
+          {
+            "name": "move_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "attack_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "block_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "block_duration",
+            "type": "u64"
+          },
+          {
+            "name": "bolt_metadata",
+            "type": {
+              "defined": {
+                "name": "BoltMetadata"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

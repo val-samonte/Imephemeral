@@ -1,0 +1,284 @@
+{
+  "address": "38bFbdTvfcYzXA8v2jmCb4y3qpiyMSbg2f6Zk4E1yQwV",
+  "metadata": {
+    "name": "character",
+    "version": "0.1.7",
+    "spec": "0.1.0",
+    "description": "Created with Bolt"
+  },
+  "instructions": [
+    {
+      "name": "initialize",
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "data",
+          "writable": true
+        },
+        {
+          "name": "entity"
+        },
+        {
+          "name": "authority"
+        },
+        {
+          "name": "instruction_sysvar_account",
+          "address": "Sysvar1nstructions1111111111111111111111111"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "update",
+      "discriminator": [
+        219,
+        200,
+        88,
+        176,
+        158,
+        63,
+        253,
+        127
+      ],
+      "accounts": [
+        {
+          "name": "bolt_component",
+          "writable": true
+        },
+        {
+          "name": "authority"
+        },
+        {
+          "name": "instruction_sysvar_account",
+          "address": "Sysvar1nstructions1111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "data",
+          "type": "bytes"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Character",
+      "discriminator": [
+        140,
+        115,
+        165,
+        36,
+        241,
+        153,
+        102,
+        84
+      ]
+    },
+    {
+      "name": "Entity",
+      "discriminator": [
+        46,
+        157,
+        161,
+        161,
+        254,
+        46,
+        79,
+        24
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "AlreadyInRoom",
+      "msg": "Already joined the room."
+    },
+    {
+      "code": 6001,
+      "name": "PlayerIsNotPayer",
+      "msg": "The payer is unauthorized to control the character."
+    },
+    {
+      "code": 6002,
+      "name": "InvalidMove",
+      "msg": "Invalid move direction."
+    },
+    {
+      "code": 6003,
+      "name": "Dead",
+      "msg": "The character is dead."
+    },
+    {
+      "code": 6004,
+      "name": "AttackCooldown",
+      "msg": "Attack is currently in cooldown."
+    },
+    {
+      "code": 6005,
+      "name": "AttackWhileBlocking",
+      "msg": "Cannot attack while currently blocking."
+    },
+    {
+      "code": 6006,
+      "name": "BlockCooldown",
+      "msg": "Block is currently in cooldown."
+    }
+  ],
+  "types": [
+    {
+      "name": "BoltMetadata",
+      "docs": [
+        "Metadata for the component."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Character",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "room",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "hp",
+            "type": "u8"
+          },
+          {
+            "name": "max_hp",
+            "type": "u8"
+          },
+          {
+            "name": "kills",
+            "type": "u16"
+          },
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          },
+          {
+            "name": "facing",
+            "type": "u8"
+          },
+          {
+            "name": "next_move",
+            "type": "u64"
+          },
+          {
+            "name": "attack_type",
+            "type": "u8"
+          },
+          {
+            "name": "next_attack",
+            "type": "u64"
+          },
+          {
+            "name": "base_damage",
+            "type": "u8"
+          },
+          {
+            "name": "slash_damage",
+            "type": "u8"
+          },
+          {
+            "name": "slash_range",
+            "type": "u8"
+          },
+          {
+            "name": "slash_wide",
+            "type": "u8"
+          },
+          {
+            "name": "stab_damage",
+            "type": "u8"
+          },
+          {
+            "name": "stab_range",
+            "type": "u8"
+          },
+          {
+            "name": "stab_wide",
+            "type": "u8"
+          },
+          {
+            "name": "next_block",
+            "type": "u64"
+          },
+          {
+            "name": "move_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "attack_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "block_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "block_duration",
+            "type": "u64"
+          },
+          {
+            "name": "bolt_metadata",
+            "type": {
+              "defined": {
+                "name": "BoltMetadata"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Entity",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -8,8 +8,7 @@ import {
 
 export const systemBlockAttack = async (
   engine: MagicBlockEngine,
-  characterEntity: PublicKey,
-  direction: number
+  characterEntity: PublicKey
 ) => {
   const applySystem = await ApplySystem({
     authority: engine.getSessionPayer(),

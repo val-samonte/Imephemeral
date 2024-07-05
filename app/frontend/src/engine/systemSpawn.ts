@@ -3,6 +3,7 @@ import { PublicKey } from '@solana/web3.js'
 import { MagicBlockEngine } from './MagicBlockEngine'
 import {
   COMPONENT_CHARACTER_PROGRAM_ID,
+  COMPONENT_ROOM_PROGRAM_ID,
   DUMMY_ROOM_PDA,
   SYSTEM_SPAWN_PROGRAM_ID,
 } from './programs'

@@ -19,9 +19,7 @@ export const createCharacter = async (engine: MagicBlockEngine) => {
 
   const entityPda = addEntity.entityPda
 
-  console.log(
-    `Initialized Entity (ID=${addEntity.entityPda}). Initialization signature: ${addEntitySignature}`
-  )
+  console.log(`Initialized Entity (ID=${addEntity.entityPda}).`)
 
   const initializeComponent = await InitializeComponent({
     payer,
@@ -37,9 +35,7 @@ export const createCharacter = async (engine: MagicBlockEngine) => {
 
   const characterPda = initializeComponent.componentPda
 
-  console.log(
-    `Initialized the character component 2 ${characterPda2}. Initialization signature: ${initializeComponentSignature}`
-  )
+  console.log(`Initialized the character component 2 ${characterPda}.`)
 
   return characterPda
 }

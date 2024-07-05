@@ -1,0 +1,233 @@
+{
+  "address": "71PwZ3SAgUPY6jDZYMLRNJsAh98Pz48EWq6pAHsLtF6i",
+  "metadata": {
+    "name": "attack",
+    "version": "0.1.7",
+    "spec": "0.1.0",
+    "description": "Created with Bolt"
+  },
+  "instructions": [
+    {
+      "name": "execute_3",
+      "discriminator": [
+        110,
+        111,
+        120,
+        86,
+        172,
+        152,
+        117,
+        173
+      ],
+      "accounts": [
+        {
+          "name": "character"
+        },
+        {
+          "name": "target"
+        },
+        {
+          "name": "room"
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Character",
+      "discriminator": [
+        140,
+        115,
+        165,
+        36,
+        241,
+        153,
+        102,
+        84
+      ]
+    },
+    {
+      "name": "Room",
+      "discriminator": [
+        156,
+        199,
+        67,
+        27,
+        222,
+        23,
+        185,
+        94
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "BoltMetadata",
+      "docs": [
+        "Metadata for the component."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Character",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "room",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "hp",
+            "type": "u8"
+          },
+          {
+            "name": "max_hp",
+            "type": "u8"
+          },
+          {
+            "name": "kills",
+            "type": "u16"
+          },
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          },
+          {
+            "name": "facing",
+            "type": "u8"
+          },
+          {
+            "name": "next_move",
+            "type": "u64"
+          },
+          {
+            "name": "attack_type",
+            "type": "u8"
+          },
+          {
+            "name": "next_attack",
+            "type": "u64"
+          },
+          {
+            "name": "base_damage",
+            "type": "u8"
+          },
+          {
+            "name": "slash_damage",
+            "type": "u8"
+          },
+          {
+            "name": "slash_range",
+            "type": "u8"
+          },
+          {
+            "name": "slash_wide",
+            "type": "u8"
+          },
+          {
+            "name": "stab_damage",
+            "type": "u8"
+          },
+          {
+            "name": "stab_range",
+            "type": "u8"
+          },
+          {
+            "name": "stab_wide",
+            "type": "u8"
+          },
+          {
+            "name": "next_block",
+            "type": "u64"
+          },
+          {
+            "name": "move_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "attack_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "block_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "block_duration",
+            "type": "u64"
+          },
+          {
+            "name": "bolt_metadata",
+            "type": {
+              "defined": {
+                "name": "BoltMetadata"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Room",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "floor",
+            "type": "pubkey"
+          },
+          {
+            "name": "doors",
+            "type": "u8"
+          },
+          {
+            "name": "index",
+            "type": "u8"
+          },
+          {
+            "name": "seed",
+            "type": "u64"
+          },
+          {
+            "name": "character_count",
+            "type": "u8"
+          },
+          {
+            "name": "initialized",
+            "type": "bool"
+          },
+          {
+            "name": "bolt_metadata",
+            "type": {
+              "defined": {
+                "name": "BoltMetadata"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

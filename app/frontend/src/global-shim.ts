@@ -1,4 +1,4 @@
 import { Buffer } from 'buffer'
 
 window.Buffer = Buffer
-window.process = { env: {} }
+// window.process = { env: {} }
