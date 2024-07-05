@@ -3,7 +3,10 @@ import { FC, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { IdlAccounts, ProgramAccount } from '@coral-xyz/anchor'
 import { PublicKey } from '@solana/web3.js'
-import { myCharacterComponentAtom } from '../atoms/characterPdaAtom'
+import {
+  characterEntityPdaAtom,
+  myCharacterComponentAtom,
+} from '../atoms/characterPdaAtom'
 import { characterListen } from '../engine/characterListen'
 import { magicBlockEngineAtom } from '../engine/MagicBlockEngineWrapper'
 import {
@@ -16,6 +19,8 @@ import { Room as RoomType } from '../types/room'
 import { CharacterOnchain } from './CharacterOnchain'
 import { LockIndicators } from './LockIndicators'
 import { MagicBlockEngine } from '../engine/MagicBlockEngine'
+import { systemBlockAttack } from '../engine/systemBlockAttack'
+import { systemAttack } from '../engine/systemAttack'
 
 export const windowSizeAtom = atom(1)
 export const scaleFactorAtom = atom((get) => get(windowSizeAtom) / 208)
@@ -34,15 +39,33 @@ export const myCharacterAtom = atom((get) => {
   return characters.find((c) => myCharacter?.equals(c.id) ?? null)
 })
 
+export const inRangeAtom = atom((get) => {
+  const myCharacter = get(myCharacterAtom)
+  const characters = get(charactersAtom)
+
+  if (!myCharacter) return []
+
+  // compute the distance between my character and all other characters
+  // return the characters that are around 16 tiles in range
+  return characters.filter((c) => {
+    if (c.id.equals(myCharacter.id)) return false
+    return (
+      Math.abs(c.x - myCharacter.x) <= 12 && Math.abs(c.y - myCharacter.y) <= 12
+    )
+  })
+})
+
 export const Room: FC = () => {
   const container = useRef<HTMLDivElement>(null)
   const setWindowSize = useSetAtom(windowSizeAtom)
   const scaleFactor = useAtomValue(scaleFactorAtom)
   const myCharacter = useAtomValue(myCharacterComponentAtom)
+  const myEntity = useAtomValue(characterEntityPdaAtom)
   const engine = useAtomValue(magicBlockEngineAtom)
   const [roomData, setRoomData] = useAtom(roomAtom)
   const [characters, setCharacters] = useAtom(charactersAtom)
   const navigate = useNavigate()
+  const inRange = useAtomValue(inRangeAtom)
 
   useEffect(() => {
     const resize = () => {
@@ -179,6 +202,23 @@ export const Room: FC = () => {
             />
           )
         })}
+
+        <div
+          className='w-full h-full select-none'
+          onClick={() => {
+            if (inRange.length === 0) return
+            if (!engine) return
+            if (!myEntity) return
+            // todo, problem: we also need to get the entities of the characters
+            // systemAttack(engine, myEntity, inRange[0])
+          }}
+          onContextMenu={(e) => {
+            e.preventDefault()
+            if (!engine) return
+            if (!myEntity) return
+            systemBlockAttack(engine, myEntity)
+          }}
+        />
       </div>
       <div className='text-white font-mono font-bold absolute top-0 left-0 p-5 pointer-events-none'>
         <p>Move: WASD keys</p>
