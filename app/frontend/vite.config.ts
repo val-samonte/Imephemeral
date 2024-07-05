@@ -33,6 +33,11 @@ export default defineConfig({
   },
   base: '/', // Specify the base public path
   build: {
+    minify: false,
+    terserOptions: {
+      compress: false,
+      mangle: false,
+    },
     rollupOptions: {
       onwarn(warning, warn) {
         if (/Failed to parse source map/.test(warning.message)) {
