@@ -5,7 +5,7 @@ import { getComponentRoomOnEphemeral } from './programs'
 export const roomListen = (
   engine: MagicBlockEngine,
   roomPda: PublicKey,
-  setRoom: (game: any) => void
+  setRoom: (room: any) => void
 ) => {
   const component = getComponentRoomOnEphemeral(engine)
 
@@ -13,9 +13,9 @@ export const roomListen = (
   component.account.room
     .fetchNullable(roomPda)
     .catch(console.error)
-    .then((game) => {
+    .then((room) => {
       if (!cancelled) {
-        setRoom(game)
+        setRoom(room)
       }
     })
 

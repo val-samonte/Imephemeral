@@ -97,7 +97,7 @@ export const CharacterOnchain: FC<{
       >
         <div
           className='absolute animate-fadeOut'
-          key={`attack_${character.nextAttack}`}
+          key={`attack_${character.nextAttack.toNumber()}`}
           style={
             character.attackType === 0
               ? {
