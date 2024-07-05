@@ -297,17 +297,20 @@ export const Character: FC<{ id: string; me?: boolean }> = ({ id, me }) => {
                   height: `${size * 1.5}px`,
                   top: `${size * -0.25}px`,
                   right: `${size * -0.5}px`,
-                  background: 'red',
                 }
               : {
                   width: `${size}px`,
                   height: `${size * 0.5}px`,
                   top: `${size * 0.25}px`,
                   right: `${-size}px`,
-                  background: 'red',
                 }
           }
-        />
+        >
+          <img
+            src={`${attackType === 0 ? '/slash.png' : '/stab.png'}`}
+            className='w-full h-full'
+          />
+        </div>
       </div>
       <div
         className='absolute bg-green-950'

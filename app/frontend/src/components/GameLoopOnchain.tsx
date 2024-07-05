@@ -20,6 +20,7 @@ export const GameLoopOnchain: FC = () => {
       if (!engine) return
       if (!myEntity) return
 
+      // if (Date.now() % 2 !== 0) return
       switch (keypressed) {
         case 'ArrowUp':
         case 'w': {
