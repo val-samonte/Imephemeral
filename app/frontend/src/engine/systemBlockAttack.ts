@@ -24,7 +24,7 @@ export const systemBlockAttack = async (
       },
     ],
   })
-  await engine.processSessionChainTransaction(
+  await engine.processSessionEphemeralTransaction(
     'SystemBlockAttack',
     applySystem.transaction
   )

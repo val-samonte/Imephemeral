@@ -28,7 +28,7 @@ export const systemMove = async (
       },
     ],
   })
-  await engine.processSessionChainTransaction(
+  await engine.processSessionEphemeralTransaction(
     'SystemMove',
     applySystem.transaction
   )

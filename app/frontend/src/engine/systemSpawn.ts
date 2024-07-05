@@ -34,7 +34,7 @@ export const systemSpawn = async (
       },
     ],
   })
-  await engine.processSessionChainTransaction(
+  await engine.processSessionEphemeralTransaction(
     'SystemSpawn',
     applySystem.transaction
   )

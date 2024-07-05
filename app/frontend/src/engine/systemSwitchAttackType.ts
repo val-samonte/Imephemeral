@@ -28,7 +28,7 @@ export const systemSwitchAttackType = async (
       },
     ],
   })
-  await engine.processSessionChainTransaction(
+  await engine.processSessionEphemeralTransaction(
     'SystemSwitchAttackType',
     applySystem.transaction
   )

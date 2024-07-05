@@ -43,7 +43,7 @@ export const systemAttack = async (
       },
     ],
   })
-  await engine.processSessionChainTransaction(
+  await engine.processSessionEphemeralTransaction(
     'SystemAttack',
     applySystem.transaction
   )
