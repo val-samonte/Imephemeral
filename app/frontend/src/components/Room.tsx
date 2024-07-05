@@ -20,7 +20,6 @@ import { CharacterOnchain } from './CharacterOnchain'
 import { LockIndicators } from './LockIndicators'
 import { MagicBlockEngine } from '../engine/MagicBlockEngine'
 import { systemBlockAttack } from '../engine/systemBlockAttack'
-import { systemAttack } from '../engine/systemAttack'
 
 export const windowSizeAtom = atom(1)
 export const scaleFactorAtom = atom((get) => get(windowSizeAtom) / 208)
