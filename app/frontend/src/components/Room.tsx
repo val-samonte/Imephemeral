@@ -68,17 +68,24 @@ export const Room: FC = () => {
 
   useEffect(() => {
     if (!engine || !roomData?.characterCount) return
+    const roomComponent = FindComponentPda({
+      componentId: COMPONENT_ROOM_PROGRAM_ID,
+      entity: DUMMY_ROOM_PDA,
+    })
     // get all characters
     const component = getComponentCharacterOnEphemeral(engine)
-    // // TODO: use filter when calling all, check for rooms
+    //TODO: use filter when calling all, check for rooms
     component.account.character.all().then((characters) => {
       const list: CharacterType[] = []
       characters.forEach((character) => {
+        if (character.account.room.toBase58() !== roomComponent.toBase58())
+          return
         list.push({
           ...character.account,
           id: character.publicKey,
         } as unknown as CharacterType)
       })
+
       setCharacters(list)
     })
   }, [engine, roomData?.characterCount, setCharacters])
