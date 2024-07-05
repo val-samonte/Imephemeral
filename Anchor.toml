@@ -1,5 +1,15 @@
 [toolchain]
 
+[programs.testnet]
+character = "38bFbdTvfcYzXA8v2jmCb4y3qpiyMSbg2f6Zk4E1yQwV"
+room = "Gsq6EAXs7298CJnfNRWsiydbYcKHuPBEesNiKzDGXDcX"
+attack = "71PwZ3SAgUPY6jDZYMLRNJsAh98Pz48EWq6pAHsLtF6i"
+block_attack = "J3ShPaMqkkSexm6HRMSx3DFD8yx5ZDK9HApanQ9ypCwk"
+create_room = "5unwDiZx5CesRy4BW42jFyBAeg3qqSAk3R2vNgsg83se"
+move_character = "Emr1nmjo96yEHNJrcFCF6eEhddhvsdY2woNTJFZMEBkU"
+spawn = "G7nyjrAKgXJup6aGfi4Zh5RSgwi6nTVTWfxRH7q6p178"
+switch_attack_type = "4vQKQW8wVAEFQrMmAb5mDPkzMzpRLywc15gWJWgNDgKi"
+
 [features]
 resolution = true
 skip-lint = false
@@ -8,7 +18,7 @@ skip-lint = false
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Testnet"
 wallet = "~/.config/solana/id.json"
 
 [workspace]
