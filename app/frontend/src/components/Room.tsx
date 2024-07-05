@@ -2,14 +2,12 @@ import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { IdlAccounts } from '@coral-xyz/anchor'
-import { FindComponentPda } from '@magicblock-labs/bolt-sdk'
 import { PublicKey } from '@solana/web3.js'
 import { myCharacterComponentAtom } from '../atoms/characterPdaAtom'
 import { characterListen } from '../engine/characterListen'
 import { magicBlockEngineAtom } from '../engine/MagicBlockEngineWrapper'
 import {
-  COMPONENT_ROOM_PROGRAM_ID,
-  DUMMY_ROOM_PDA,
+  DUMMY_ROOM_COMPONENT,
   getComponentCharacterOnEphemeral,
 } from '../engine/programs'
 import { roomListen } from '../engine/roomListen'
@@ -22,8 +20,6 @@ export const windowSizeAtom = atom(1)
 export const scaleFactorAtom = atom((get) => get(windowSizeAtom) / 208)
 export const roomTotalStepSizeAtom = atom(52)
 export const roomAtom = atom<IdlAccounts<RoomType>['room'] | null>(null)
-// @ts-ignore:next-line
-import { Buffer } from 'buffer'
 
 export type CharacterType = IdlAccounts<Character>['character'] & {
   id: PublicKey
@@ -65,13 +61,13 @@ export const Room: FC = () => {
 
   useEffect(() => {
     if (!engine) return
-    const roomComponent = FindComponentPda({
-      componentId: COMPONENT_ROOM_PROGRAM_ID,
-      entity: DUMMY_ROOM_PDA,
-    })
+    // const roomComponent = FindComponentPda({
+    //   componentId: COMPONENT_ROOM_PROGRAM_ID,
+    //   entity: DUMMY_ROOM_PDA,
+    // })
     return roomListen(
       engine,
-      roomComponent,
+      DUMMY_ROOM_COMPONENT,
       (roomData: IdlAccounts<RoomType>['room'] | null) => {
         setRoomData(roomData)
       }
@@ -80,17 +76,17 @@ export const Room: FC = () => {
 
   useEffect(() => {
     if (!engine || !roomData?.characterCount) return
-    const roomComponent = FindComponentPda({
-      componentId: COMPONENT_ROOM_PROGRAM_ID,
-      entity: DUMMY_ROOM_PDA,
-    })
+    // const roomComponent = FindComponentPda({
+    //   componentId: COMPONENT_ROOM_PROGRAM_ID,
+    //   entity: DUMMY_ROOM_PDA,
+    // })
     // get all characters
     const component = getComponentCharacterOnEphemeral(engine)
     //TODO: use filter when calling all, check for rooms
     component.account.character.all().then((characters) => {
       const list: CharacterType[] = []
       characters.forEach((character) => {
-        if (!character.account.room.equals(roomComponent)) return
+        if (!character.account.room.equals(DUMMY_ROOM_COMPONENT)) return
         list.push({
           ...character.account,
           id: character.publicKey,

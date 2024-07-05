@@ -25,6 +25,10 @@ export const DUMMY_ROOM_PDA = new PublicKey(
   '5tRgBBXYeMyDU2ggfvVgVPPmvK9W5F5GHs2v4JFrx8gL'
 )
 
+export const DUMMY_ROOM_COMPONENT = new PublicKey(
+  '8j3zdoK9thpXET2yTCFF3CgQrS36t1r1GWmPCSn64e1'
+)
+
 const componentCharacter = CharacterIdl as Character
 const componentRoom = RoomIdl as Room
 const systemCreateRoom = CreateRoomIdl as CreateRoom

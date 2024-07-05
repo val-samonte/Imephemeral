@@ -38,9 +38,9 @@ export const createCharacter = async (engine: MagicBlockEngine) => {
     'confirmed'
   )
 
-  const characterPda = initializeComponent.componentPda
+  const componentPda = initializeComponent.componentPda
 
-  console.log(`Initialized the character component ${characterPda}.`)
+  console.log(`Initialized the character component ${componentPda}.`)
 
   console.log('Delegating the Character')
 
@@ -59,5 +59,8 @@ export const createCharacter = async (engine: MagicBlockEngine) => {
 
   console.log('Character is now delegated. Signature: ', delegateSignature)
 
-  return entityPda
+  return {
+    entityPda,
+    componentPda,
+  }
 }

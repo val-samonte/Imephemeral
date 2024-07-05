@@ -35,14 +35,40 @@ export const characterEntityPdaAtom = atom(
   }
 )
 
-export const myCharacterComponentAtom = atom((get) => {
-  const entity = get(characterEntityPdaAtom)
-  if (!entity) return null
+export const myCharacterComponentBaseAtom = atomFamily(
+  (sessionPubkey: string) =>
+    atomWithStorage<string>(`characterComponentPdaBase_${sessionPubkey}`, '')
+)
 
-  const component = FindComponentPda({
-    componentId: COMPONENT_CHARACTER_PROGRAM_ID,
-    entity,
-  })
+export const myCharacterComponentAtom = atom(
+  (get) => {
+    // TODO: resolve Buffer issues when compiling
+    // const entity = get(characterEntityPdaAtom)
+    // if (!entity) return null
 
-  return component.toBase58()
-})
+    // const component = FindComponentPda({
+    //   componentId: COMPONENT_CHARACTER_PROGRAM_ID,
+    //   entity,
+    // })
+
+    // return component.toBase58()
+    const sessionString = get(sessionBaseAtom)
+    if (!sessionString) return null
+
+    const keypair = Keypair.fromSecretKey(bs58.decode(sessionString))
+
+    const base = get(myCharacterComponentBaseAtom(keypair.publicKey.toBase58()))
+    return base ? new PublicKey(base) : null
+  },
+  (get, set, newValue: PublicKey | null) => {
+    const sessionString = get(sessionBaseAtom)
+    if (!sessionString) return null
+
+    const keypair = Keypair.fromSecretKey(bs58.decode(sessionString))
+
+    set(
+      myCharacterComponentBaseAtom(keypair.publicKey.toBase58()),
+      newValue?.toBase58() ?? ''
+    )
+  }
+)

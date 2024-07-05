@@ -1,6 +1,9 @@
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useEffect, useRef, useState } from 'react'
-import { characterEntityPdaAtom } from '../atoms/characterPdaAtom'
+import {
+  characterEntityPdaAtom,
+  myCharacterComponentAtom,
+} from '../atoms/characterPdaAtom'
 import { createCharacter } from '../engine/createCharacter'
 import { magicBlockEngineAtom } from '../engine/MagicBlockEngineWrapper'
 import { systemSpawn } from '../engine/systemSpawn'
@@ -9,7 +12,10 @@ export const FundModal = () => {
   const engine = useAtomValue(magicBlockEngineAtom)
   const sessionPayer = engine?.getSessionPayer()
   const [sessionLamports, setSessionLamports] = useState<number | null>(null)
-  const [characterPda, setCharacterPda] = useAtom(characterEntityPdaAtom)
+  const [characterEntityPda, setCharacterEntityPda] = useAtom(
+    characterEntityPdaAtom
+  )
+  const setMyCharacterComponent = useSetAtom(myCharacterComponentAtom)
   const [errorCreating, setErrorCreating] = useState('')
   const isCreatingPda = useRef(false)
 
@@ -25,14 +31,18 @@ export const FundModal = () => {
     if (sessionLamports === null) return
     if (!engine) return
     if (errorCreating) return
-    if (!characterPda && sessionLamports >= engine.getSessionMinLamports()) {
+    if (
+      !characterEntityPda &&
+      sessionLamports >= engine.getSessionMinLamports()
+    ) {
       if (isCreatingPda.current) return
       isCreatingPda.current = true
       const create = async () => {
         try {
-          const pda = await createCharacter(engine)
-          await systemSpawn(engine, pda)
-          setCharacterPda(pda)
+          const { componentPda, entityPda } = await createCharacter(engine)
+          await systemSpawn(engine, entityPda)
+          setCharacterEntityPda(entityPda)
+          setMyCharacterComponent(componentPda)
         } catch (error) {
           console.error(error)
           isCreatingPda.current = false
@@ -43,16 +53,17 @@ export const FundModal = () => {
     }
   }, [
     engine,
-    characterPda,
+    characterEntityPda,
     sessionLamports,
     errorCreating,
-    setCharacterPda,
+    setCharacterEntityPda,
     setErrorCreating,
+    setMyCharacterComponent,
   ])
 
   if (sessionLamports === null) return null
   if (!engine) return null
-  if (characterPda) return null
+  if (characterEntityPda) return null
 
   if (errorCreating) {
     return (
