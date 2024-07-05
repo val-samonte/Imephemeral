@@ -1,7 +1,7 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { IdlAccounts } from '@coral-xyz/anchor'
+import { IdlAccounts, ProgramAccount } from '@coral-xyz/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { myCharacterComponentAtom } from '../atoms/characterPdaAtom'
 import { characterListen } from '../engine/characterListen'
@@ -15,6 +15,7 @@ import { Character } from '../types/character'
 import { Room as RoomType } from '../types/room'
 import { CharacterOnchain } from './CharacterOnchain'
 import { LockIndicators } from './LockIndicators'
+import { MagicBlockEngine } from '../engine/MagicBlockEngine'
 
 export const windowSizeAtom = atom(1)
 export const scaleFactorAtom = atom((get) => get(windowSizeAtom) / 208)
@@ -81,9 +82,10 @@ export const Room: FC = () => {
     //   entity: DUMMY_ROOM_PDA,
     // })
     // get all characters
-    const component = getComponentCharacterOnEphemeral(engine)
+    // const component = getComponentCharacterOnEphemeral(engine)
     //TODO: use filter when calling all, check for rooms
-    component.account.character.all().then((characters) => {
+    // component.account.character.all()
+    all(engine).then((characters) => {
       const list: CharacterType[] = []
       characters.forEach((character) => {
         if (!character.account.room.equals(DUMMY_ROOM_COMPONENT)) return
@@ -198,4 +200,22 @@ export const Room: FC = () => {
       </div>
     </div>
   )
+}
+
+async function all(
+  engine: MagicBlockEngine
+): Promise<ProgramAccount<CharacterType>[]> {
+  console.log('all')
+  const p = getComponentCharacterOnEphemeral(engine)
+  let resp = await p.provider.connection.getProgramAccounts(p.programId, {
+    commitment: p.provider.connection.commitment,
+    filters: [],
+  })
+
+  return resp.map(({ pubkey, account }) => {
+    return {
+      publicKey: pubkey,
+      account: p.coder.accounts.decode('character', account.data),
+    }
+  })
 }
