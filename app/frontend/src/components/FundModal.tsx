@@ -123,7 +123,9 @@ export const FundModal = () => {
             setFunding(true)
             try {
               await engine.fundSession()
-            } catch (e) {}
+            } catch (e) {
+              console.error(e)
+            }
             setFunding(false)
           }}
           className={cn(
