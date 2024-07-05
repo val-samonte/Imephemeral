@@ -1,16 +1,15 @@
-import { InitializeRoom } from './components/InitializeRoom'
 import { MagicBlockEngineWrapper } from './engine/MagicBlockEngineWrapper'
 
 function App() {
   return (
     <MagicBlockEngineWrapper
       splash={
-        <div>
-          <div>Connecting...</div>
+        <div className='fixed h-screen inset-x-0 top-0 flex flex-col items-center justify-center'>
+          Loading
         </div>
       }
     >
-      <InitializeRoom />
+      Game
     </MagicBlockEngineWrapper>
   )
 }
