@@ -1,5 +1,5 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { IdlAccounts } from '@coral-xyz/anchor'
 import { FindComponentPda } from '@magicblock-labs/bolt-sdk'
 import { PublicKey } from '@solana/web3.js'
@@ -26,6 +26,14 @@ export type CharacterType = IdlAccounts<Character>['character'] & {
   id: PublicKey
 }
 
+export const charactersAtom = atom<CharacterType[]>([])
+
+export const myCharacterAtom = atom((get) => {
+  const characters = get(charactersAtom)
+  const myCharacter = get(myCharacterComponentAtom)
+  return characters.find((c) => c.id.toBase58() === myCharacter) ?? null
+})
+
 export const Room: FC = () => {
   const container = useRef<HTMLDivElement>(null)
   const setWindowSize = useSetAtom(windowSizeAtom)
@@ -33,7 +41,7 @@ export const Room: FC = () => {
   const myCharacter = useAtomValue(myCharacterComponentAtom)
   const engine = useAtomValue(magicBlockEngineAtom)
   const [roomData, setRoomData] = useAtom(roomAtom)
-  const [characters, setCharacters] = useState<CharacterType[]>([])
+  const [characters, setCharacters] = useAtom(charactersAtom)
 
   useEffect(() => {
     const resize = () => {
@@ -78,8 +86,7 @@ export const Room: FC = () => {
     component.account.character.all().then((characters) => {
       const list: CharacterType[] = []
       characters.forEach((character) => {
-        if (character.account.room.toBase58() !== roomComponent.toBase58())
-          return
+        if (!character.account.room.equals(roomComponent)) return
         list.push({
           ...character.account,
           id: character.publicKey,
@@ -132,6 +139,20 @@ export const Room: FC = () => {
       })
     }
   }, [engine, characters, setCharacters])
+
+  // todo: show respawn button
+  useEffect(() => {
+    if (!engine || !myCharacter) return
+    // where am i right now? am i in the room?
+    // const roomComponent = FindComponentPda({
+    //   componentId: COMPONENT_ROOM_PROGRAM_ID,
+    //   entity: DUMMY_ROOM_PDA,
+    // })
+    const component = getComponentCharacterOnEphemeral(engine)
+    component.account.character.fetch(myCharacter).then((_character) => {
+      // console.log(character.room.toBase58(), roomComponent.toBase58())
+    })
+  }, [myCharacter])
 
   return (
     <div

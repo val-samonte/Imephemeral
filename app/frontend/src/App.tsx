@@ -1,4 +1,6 @@
+import { ControllerOnchain } from './components/ControllerOnchain'
 import { FundModal } from './components/FundModal'
+import { GameLoopOnchain } from './components/GameLoopOnchain'
 import { Room } from './components/Room'
 import { MagicBlockEngineWrapper } from './engine/MagicBlockEngineWrapper'
 
@@ -11,6 +13,8 @@ function App() {
         </div>
       }
     >
+      <ControllerOnchain />
+      <GameLoopOnchain />
       <Room />
       <FundModal />
       {/* <InitializeRoom /> */}
