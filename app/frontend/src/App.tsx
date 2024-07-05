@@ -1,3 +1,5 @@
+import { FundModal } from './components/FundModal'
+import { Room } from './components/Room'
 import { MagicBlockEngineWrapper } from './engine/MagicBlockEngineWrapper'
 
 function App() {
@@ -9,7 +11,8 @@ function App() {
         </div>
       }
     >
-      Game
+      <Room />
+      <FundModal />
     </MagicBlockEngineWrapper>
   )
 }
