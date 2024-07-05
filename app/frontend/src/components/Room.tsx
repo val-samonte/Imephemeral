@@ -1,17 +1,23 @@
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
 import { characterEntityPdaAtom } from '../atoms/characterPdaAtom'
+import { magicBlockEngineAtom } from '../engine/MagicBlockEngineWrapper'
+import { DUMMY_ROOM_PDA } from '../engine/programs'
+import { roomListen } from '../engine/roomListen'
 import { LockIndicators } from './LockIndicators'
 
 export const windowSizeAtom = atom(1)
 export const scaleFactorAtom = atom((get) => get(windowSizeAtom) / 208)
 export const roomTotalStepSizeAtom = atom(52)
 
+export const characterListAtom = atom<string[]>([])
+
 export const Room: FC = () => {
   const container = useRef<HTMLDivElement>(null)
   const setWindowSize = useSetAtom(windowSizeAtom)
   const scaleFactor = useAtomValue(scaleFactorAtom)
   const characterEntityPda = useAtomValue(characterEntityPdaAtom)
+  const engine = useAtomValue(magicBlockEngineAtom)
 
   useEffect(() => {
     const resize = () => {
@@ -28,6 +34,13 @@ export const Room: FC = () => {
       window.removeEventListener('resize', resize)
     }
   }, [setWindowSize])
+
+  useEffect(() => {
+    if (!engine) return
+    return roomListen(engine, DUMMY_ROOM_PDA, (roomData) => {
+      console.log(roomData)
+    })
+  }, [engine])
 
   useEffect(() => {
     // todo:

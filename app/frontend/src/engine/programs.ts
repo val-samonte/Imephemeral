@@ -1,12 +1,12 @@
 import { PublicKey } from '@solana/web3.js'
-import * as AttackIdl from '../idl/attack.json'
-import * as BlockAttackIdl from '../idl/block_attack.json'
-import * as CharacterIdl from '../idl/character.json'
-import * as CreateRoomIdl from '../idl/create_room.json'
-import * as MoveCharacterIdl from '../idl/move_character.json'
-import * as RoomIdl from '../idl/room.json'
-import * as SpawnIdl from '../idl/spawn.json'
-import * as SwitchAttackTypeIdl from '../idl/switch_attack_type.json'
+import AttackIdl from '../idl/attack.json'
+import BlockAttackIdl from '../idl/block_attack.json'
+import CharacterIdl from '../idl/character.json'
+import CreateRoomIdl from '../idl/create_room.json'
+import MoveCharacterIdl from '../idl/move_character.json'
+import RoomIdl from '../idl/room.json'
+import SpawnIdl from '../idl/spawn.json'
+import SwitchAttackTypeIdl from '../idl/switch_attack_type.json'
 import { Attack } from '../types/attack'
 import { BlockAttack } from '../types/block_attack'
 import { Character } from '../types/character'
@@ -15,6 +15,7 @@ import { MoveCharacter } from '../types/move_character'
 import { Room } from '../types/room'
 import { Spawn } from '../types/spawn'
 import { SwitchAttackType } from '../types/switch_attack_type'
+import { MagicBlockEngine } from './MagicBlockEngine'
 
 export const WORLD_PDA = new PublicKey(
   'JBupPMmv4zaXa5c8EdubsCPvoHZwCK7mwnDfmfs8dC5Y'
@@ -51,3 +52,11 @@ export const SYSTEM_ATTACK_PROGRAM_ID = new PublicKey(systemAttack.address)
 export const SYSTEM_BLOCK_ATTACK_PROGRAM_ID = new PublicKey(
   systemBlockAttack.address
 )
+
+export function getComponentRoomOnEphemeral(engine: MagicBlockEngine) {
+  return engine.getProgramOnEphemeral<Room>(componentRoom)
+}
+
+export function getComponentCharacterOnEphemeral(engine: MagicBlockEngine) {
+  return engine.getProgramOnEphemeral<Character>(componentCharacter)
+}
