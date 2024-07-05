@@ -23,11 +23,11 @@ const ProvidePlugin = (vars: any) => {
 export default defineConfig({
   resolve: {
     alias: {
-      // http: resolve(require.resolve('stream-http')),
-      // https: resolve(require.resolve('https-browserify')),
-      // crypto: resolve(require.resolve('crypto-browserify')),
-      // stream: resolve(require.resolve('stream-browserify')),
-      // buffer: resolve(require.resolve('buffer/').replace(/index\.js$/, '')),
+      http: resolve(require.resolve('stream-http')),
+      https: resolve(require.resolve('https-browserify')),
+      crypto: resolve(require.resolve('crypto-browserify')),
+      stream: resolve(require.resolve('stream-browserify')),
+      buffer: resolve(require.resolve('buffer/').replace(/index\.js$/, '')),
       '@': resolve(__dirname, './src'),
     },
   },
@@ -51,7 +51,7 @@ export default defineConfig({
     react(),
     ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
-      process: 'process/browser',
+      // process: 'process/browser',
     }),
   ],
 })
