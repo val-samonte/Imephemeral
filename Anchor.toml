@@ -1,9 +1,9 @@
 [toolchain]
 
 [programs.testnet]
+attack="7nEKhxwapm3apAgrk3ZWivWtJgTqCC5SAdGW2qh5DNf4"
 character = "HxkYZ6hAFhVpjEMtLDfYwDmMUCu5ctzB4hLG2bjCH1sB"
 room = "8eoFAxiRrAh5RPPuDNyJT6CdJRQLHbs2ntzJRHZ2dsfb"
-attack = "71PwZ3SAgUPY6jDZYMLRNJsAh98Pz48EWq6pAHsLtF6i"
 block_attack = "J3ShPaMqkkSexm6HRMSx3DFD8yx5ZDK9HApanQ9ypCwk"
 create_room = "5unwDiZx5CesRy4BW42jFyBAeg3qqSAk3R2vNgsg83se"
 move_character = "Emr1nmjo96yEHNJrcFCF6eEhddhvsdY2woNTJFZMEBkU"

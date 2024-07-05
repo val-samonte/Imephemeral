@@ -53,8 +53,7 @@ export const InitializeRoom: FC = () => {
       'confirmed'
     )
 
-    // TODO: figure out why delegation is throwing Anchor error
-    // console.log('Delegating to Ephemeral rollups')
+    console.log('Delegating to Ephemeral rollups')
 
     const delegateComponentInstruction = createDelegateInstruction({
       entity: addEntity.entityPda,
