@@ -23,21 +23,21 @@ const ProvidePlugin = (vars: any) => {
 export default defineConfig({
   resolve: {
     alias: {
-      http: resolve(require.resolve('stream-http')),
-      https: resolve(require.resolve('https-browserify')),
-      crypto: resolve(require.resolve('crypto-browserify')),
-      stream: resolve(require.resolve('stream-browserify')),
-      buffer: resolve(require.resolve('buffer/').replace(/index\.js$/, '')),
+      // http: resolve(require.resolve('stream-http')),
+      // https: resolve(require.resolve('https-browserify')),
+      // crypto: resolve(require.resolve('crypto-browserify')),
+      // stream: resolve(require.resolve('stream-browserify')),
+      // buffer: resolve(require.resolve('buffer/').replace(/index\.js$/, '')),
       '@': resolve(__dirname, './src'),
     },
   },
   base: '/', // Specify the base public path
   build: {
-    minify: false,
-    terserOptions: {
-      compress: false,
-      mangle: false,
-    },
+    // minify: false,
+    // terserOptions: {
+    //   compress: false,
+    //   mangle: false,
+    // },
     rollupOptions: {
       onwarn(warning, warn) {
         if (/Failed to parse source map/.test(warning.message)) {
@@ -50,7 +50,8 @@ export default defineConfig({
   plugins: [
     react(),
     ProvidePlugin({
-      Buffer: ['buffer', 'Buffer'], // Correctly provide Buffer globally
+      Buffer: ['buffer', 'Buffer'],
+      process: 'process/browser',
     }),
   ],
 })
