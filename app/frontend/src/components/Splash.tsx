@@ -32,7 +32,7 @@ export const Splash: FC = () => {
                   navigate('/on-chain')
                 }}
               >
-                MagicBlock Engine
+                MagicBlock (Testnet)
               </button>
             </div>
             <button
