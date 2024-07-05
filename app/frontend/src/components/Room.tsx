@@ -22,6 +22,7 @@ export const windowSizeAtom = atom(1)
 export const scaleFactorAtom = atom((get) => get(windowSizeAtom) / 208)
 export const roomTotalStepSizeAtom = atom(52)
 export const roomAtom = atom<IdlAccounts<RoomType>['room'] | null>(null)
+// @ts-ignore:next-line
 import { Buffer } from 'buffer'
 
 export type CharacterType = IdlAccounts<Character>['character'] & {

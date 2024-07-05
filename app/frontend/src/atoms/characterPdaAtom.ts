@@ -5,7 +5,8 @@ import { FindComponentPda } from '@magicblock-labs/bolt-sdk'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { COMPONENT_CHARACTER_PROGRAM_ID } from '../engine/programs'
 import { sessionBaseAtom } from '../hooks/useSessionKeypair'
-import {Buffer} from 'buffer'
+// @ts-ignore:next-line
+import { Buffer } from 'buffer'
 
 export const characterEntityPdaBaseAtom = atomFamily((sessionPubkey: string) =>
   atomWithStorage<string>(`characterPdaBase_${sessionPubkey}`, '')
