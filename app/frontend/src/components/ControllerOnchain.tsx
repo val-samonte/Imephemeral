@@ -1,5 +1,6 @@
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
+import { characterEntityPdaAtom } from '../atoms/characterPdaAtom'
 import { magicBlockEngineAtom } from '../engine/MagicBlockEngineWrapper'
 import { systemSwitchAttackType } from '../engine/systemSwitchAttackType'
 import { myCharacterAtom } from './Room'
@@ -10,6 +11,7 @@ export const ControllerOnchain: FC = () => {
   const setKeyPressed = useSetAtom(keypressedAtom)
   const pressedKeysList = useRef<string[]>([])
   const engine = useAtomValue(magicBlockEngineAtom)
+  const myEntity = useAtomValue(characterEntityPdaAtom)
   const myCharacter = useAtomValue(myCharacterAtom)
 
   useEffect(() => {
@@ -17,10 +19,10 @@ export const ControllerOnchain: FC = () => {
       event.preventDefault()
       switch (event.key) {
         case 'q': {
-          if (!engine || !myCharacter) return
+          if (!engine || !myEntity || !myCharacter) return
           systemSwitchAttackType(
             engine,
-            myCharacter.id,
+            myEntity,
             myCharacter.attackType === 0 ? 1 : 0
           )
           break
@@ -52,7 +54,7 @@ export const ControllerOnchain: FC = () => {
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
     }
-  }, [engine, myCharacter, setKeyPressed])
+  }, [engine, myCharacter, myEntity, setKeyPressed])
 
   return null
 }

@@ -1,15 +1,15 @@
 import { useAtomValue } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
+import { characterEntityPdaAtom } from '../atoms/characterPdaAtom'
 import { magicBlockEngineAtom } from '../engine/MagicBlockEngineWrapper'
 import { systemMove } from '../engine/systemMove'
 import { keypressedAtom } from './ControllerOnchain'
-import { myCharacterAtom } from './Room'
 
 export const GameLoopOnchain: FC = () => {
   const engine = useAtomValue(magicBlockEngineAtom)
   const keypressed = useAtomValue(keypressedAtom)
   const frameId = useRef(0)
-  const myCharacter = useAtomValue(myCharacterAtom)
+  const myEntity = useAtomValue(characterEntityPdaAtom)
 
   useEffect(() => {
     cancelAnimationFrame(frameId.current)
@@ -18,27 +18,27 @@ export const GameLoopOnchain: FC = () => {
       if (!keypressed) return
       // todo: replace Date.now with time from the requestAnimationFrame
       if (!engine) return
-      if (!myCharacter) return
+      if (!myEntity) return
 
       switch (keypressed) {
         case 'ArrowUp':
         case 'w': {
-          systemMove(engine, myCharacter.id, 0b1000)
+          systemMove(engine, myEntity, 0b1000)
           break
         }
         case 'ArrowRight':
         case 'd': {
-          systemMove(engine, myCharacter.id, 0b0100)
+          systemMove(engine, myEntity, 0b0100)
           break
         }
         case 'ArrowDown':
         case 's': {
-          systemMove(engine, myCharacter.id, 0b0010)
+          systemMove(engine, myEntity, 0b0010)
           break
         }
         case 'ArrowLeft':
         case 'a': {
-          systemMove(engine, myCharacter.id, 0b0001)
+          systemMove(engine, myEntity, 0b0001)
           break
         }
       }
@@ -50,7 +50,7 @@ export const GameLoopOnchain: FC = () => {
     return () => {
       cancelAnimationFrame(frameId.current)
     }
-  }, [engine, myCharacter, keypressed])
+  }, [engine, myEntity, keypressed])
 
   return null
 }
