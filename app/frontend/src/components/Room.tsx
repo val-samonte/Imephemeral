@@ -30,7 +30,7 @@ export const charactersAtom = atom<CharacterType[]>([])
 export const myCharacterAtom = atom((get) => {
   const characters = get(charactersAtom)
   const myCharacter = get(myCharacterComponentAtom)
-  return characters.find((c) => c.id.toBase58() === myCharacter) ?? null
+  return characters.find((c) => myCharacter?.equals(c.id) ?? null)
 })
 
 export const Room: FC = () => {
@@ -173,7 +173,7 @@ export const Room: FC = () => {
             <CharacterOnchain
               character={character}
               key={`character_${id}`}
-              me={id === myCharacter}
+              me={myCharacter?.equals(character.id) ?? false}
             />
           )
         })}
