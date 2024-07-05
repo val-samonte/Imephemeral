@@ -61,10 +61,17 @@ export const InitializeRoom: FC = () => {
       ownerProgram: COMPONENT_ROOM_PROGRAM_ID,
       payer: engine.getSessionPayer(),
     })
-    await engine.processSessionChainTransaction(
+
+    const signature = await engine.processSessionChainTransaction(
       'DelegateComponent',
       new Transaction().add(delegateComponentInstruction),
       'finalized'
+    )
+
+    console.log(
+      'Delegate signature ',
+      signature,
+      initializeComponent.componentPda.toBase58()
     )
 
     const applySystem = await ApplySystem({

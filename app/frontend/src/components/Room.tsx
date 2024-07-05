@@ -32,6 +32,10 @@ export const Room: FC = () => {
   useEffect(() => {
     // todo:
     // listen to character entity's component PDA
+    //   const counterPda = FindComponentPda({
+    //     componentId: counterComponent.programId,
+    //     entity: entityPda,
+    // });
   }, [characterEntityPda])
 
   return (

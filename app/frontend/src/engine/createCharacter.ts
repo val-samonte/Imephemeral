@@ -1,4 +1,9 @@
-import { AddEntity, InitializeComponent } from '@magicblock-labs/bolt-sdk'
+import {
+  AddEntity,
+  createDelegateInstruction,
+  InitializeComponent,
+} from '@magicblock-labs/bolt-sdk'
+import { Transaction } from '@solana/web3.js'
 import { MagicBlockEngine } from './MagicBlockEngine'
 import { COMPONENT_CHARACTER_PROGRAM_ID, WORLD_PDA } from './programs'
 
@@ -36,6 +41,23 @@ export const createCharacter = async (engine: MagicBlockEngine) => {
   const characterPda = initializeComponent.componentPda
 
   console.log(`Initialized the character component ${characterPda}.`)
+
+  console.log('Delegating the Character')
+
+  const delegateComponentInstruction = createDelegateInstruction({
+    entity: addEntity.entityPda,
+    account: initializeComponent.componentPda,
+    ownerProgram: COMPONENT_CHARACTER_PROGRAM_ID,
+    payer: engine.getSessionPayer(),
+  })
+
+  const delegateSignature = await engine.processSessionChainTransaction(
+    'DelegateComponent',
+    new Transaction().add(delegateComponentInstruction),
+    'finalized'
+  )
+
+  console.log('Character is now delegated. Signature: ', delegateSignature)
 
   return entityPda
 }

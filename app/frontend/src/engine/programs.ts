@@ -21,7 +21,7 @@ export const WORLD_PDA = new PublicKey(
 )
 
 export const DUMMY_ROOM_PDA = new PublicKey(
-  'Htywf9cEp4UJ222Bb86TNFUrKZQYL3EeFEkAiEuanvXX'
+  '5tRgBBXYeMyDU2ggfvVgVPPmvK9W5F5GHs2v4JFrx8gL'
 )
 
 const componentCharacter = CharacterIdl as Character
