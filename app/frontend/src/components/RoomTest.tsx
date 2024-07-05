@@ -1,5 +1,6 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useMemo, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useSessionKeypair } from '../hooks/useSessionKeypair'
 import { Account } from './Account'
 import {
@@ -24,6 +25,7 @@ export const RoomTest: FC = () => {
 
   const [character, action] = useAtom(charactersAtom(characterId))
   const charactersList = useAtomValue(charactersListAtom)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const resize = () => {
@@ -92,6 +94,18 @@ export const RoomTest: FC = () => {
             dateTo={character.nextBlock}
             format='[Block Cooldown:] sSSS[ms]'
           />
+        </p>
+        <p>
+          Checkout the{' '}
+          <button
+            className='underline pointer-events-auto'
+            onClick={() => {
+              navigate('/on-chain')
+            }}
+          >
+            Magicblock Version
+          </button>{' '}
+          <br />
         </p>
       </div>
 

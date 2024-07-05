@@ -1,5 +1,6 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { FC, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { IdlAccounts } from '@coral-xyz/anchor'
 import { FindComponentPda } from '@magicblock-labs/bolt-sdk'
 import { PublicKey } from '@solana/web3.js'
@@ -42,6 +43,7 @@ export const Room: FC = () => {
   const engine = useAtomValue(magicBlockEngineAtom)
   const [roomData, setRoomData] = useAtom(roomAtom)
   const [characters, setCharacters] = useAtom(charactersAtom)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const resize = () => {
@@ -177,6 +179,24 @@ export const Room: FC = () => {
             />
           )
         })}
+      </div>
+      <div className='text-white font-mono font-bold absolute top-0 left-0 p-5 pointer-events-none'>
+        <p>Move: WASD keys</p>
+        <hr className='my-2' />
+        <p>This version is still WIP</p>
+        <p>
+          Checkout the{' '}
+          <button
+            className='underline pointer-events-auto'
+            onClick={() => {
+              navigate('/partykit')
+            }}
+          >
+            partykit version
+          </button>{' '}
+          <br />
+          to see what would be the goal
+        </p>
       </div>
     </div>
   )
