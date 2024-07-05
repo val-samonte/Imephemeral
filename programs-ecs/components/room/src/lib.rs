@@ -6,12 +6,12 @@ declare_id!("Gsq6EAXs7298CJnfNRWsiydbYcKHuPBEesNiKzDGXDcX");
 #[derive(Default)]
 pub struct Room {
     pub floor: Pubkey,
-    pub depth: u64,
+    pub doors: u8,
+    pub index: u8,
     pub seed: u64,
     pub character_count: u8,
     pub initialized: bool,
 }
-
 
 #[error_code]
 pub enum RoomError {

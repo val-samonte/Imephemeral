@@ -14,8 +14,9 @@ pub mod create_room {
             return Err(RoomError::AlreadyInitialized.into());
         }
         room.floor = Pubkey::new_from_array(args.floor);
-        room.depth = 0;
+        room.index = 0;
         room.seed = 0;
+        room.doors = 0b0000_0000;
         room.character_count = 0;
         room.initialized = true;
         Ok(ctx.accounts)

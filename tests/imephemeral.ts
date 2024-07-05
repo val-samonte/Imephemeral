@@ -107,11 +107,11 @@ describe('Imephemeral', () => {
       systemId: systemCreateRoom.programId,
       args: {
         // todo: figure out how to pass Pubkeys
-        floorPda: Array.from(floorPda.toBytes()),
+        floor: Array.from(floorPda.toBytes()),
       },
       entities: [
         {
-          entity: roomPda,
+          entity: roomEntity,
           components: [
             {
               componentId: roomComponent.programId,
@@ -122,7 +122,7 @@ describe('Imephemeral', () => {
     })
   })
 
-  xit('Add Entity 1', async () => {
+  it('Add Entity 1', async () => {
     const addEntity = await AddEntity({
       payer: provider.wallet.publicKey,
       world: worldPda,
@@ -135,7 +135,7 @@ describe('Imephemeral', () => {
     )
   })
 
-  xit('Initialize the first characterPda', async () => {
+  it('Initialize the first characterPda', async () => {
     const initializeComponent = await InitializeComponent({
       payer: provider.wallet.publicKey,
       entity: entityPda1,
@@ -151,19 +151,24 @@ describe('Imephemeral', () => {
     )
   })
 
-  xit('Spawn the 1st character to the room', async () => {
+  it('Spawn the 1st character to the room', async () => {
     await tryApplySystem({
       systemId: systemSpawn.programId,
-      args: {
-        // todo: figure out how to pass Pubkeys
-        room: Array.from(roomPda.toBytes()),
-      },
+      args: {},
       entities: [
         {
           entity: entityPda1,
           components: [
             {
               componentId: characterComponent.programId,
+            },
+          ],
+        },
+        {
+          entity: roomEntity,
+          components: [
+            {
+              componentId: roomComponent.programId,
             },
           ],
         },
@@ -183,7 +188,7 @@ describe('Imephemeral', () => {
     expect(character1Data.y).to.equal(24, 'Default y position is invalid')
   })
 
-  xit('Move the character', async () => {
+  it('Move the character', async () => {
     await tryApplySystem({
       systemId: systemMove.programId,
       args: {
@@ -206,7 +211,7 @@ describe('Imephemeral', () => {
     expect(character1Data.x).to.equal(23, 'New x position is invalid')
   })
 
-  xit('Switch attack type the character', async () => {
+  it('Switch attack type the character', async () => {
     await tryApplySystem({
       systemId: systemSwitchAttackType.programId,
       args: {
@@ -229,7 +234,7 @@ describe('Imephemeral', () => {
     expect(character1Data.attackType).to.equal(1, 'Attack type is invalid')
   })
 
-  xit('Block attack', async () => {
+  it('Block attack', async () => {
     const previousData = await characterComponent.account.character.fetch(
       characterPda1
     )
@@ -257,7 +262,7 @@ describe('Imephemeral', () => {
     )
   })
 
-  xit('Create and Spawn another character', async () => {
+  it('Create and Spawn another character', async () => {
     const addEntity = await AddEntity({
       payer: provider.wallet.publicKey,
       world: worldPda,
@@ -286,9 +291,7 @@ describe('Imephemeral', () => {
 
     await tryApplySystem({
       systemId: systemSpawn.programId,
-      args: {
-        floor: Array.from(floorPda.toBytes()),
-      },
+      args: {},
       entities: [
         {
           entity: entityPda2,
@@ -299,7 +302,7 @@ describe('Imephemeral', () => {
           ],
         },
         {
-          entity: roomPda,
+          entity: roomEntity,
           components: [
             {
               componentId: roomComponent.programId,
@@ -308,9 +311,12 @@ describe('Imephemeral', () => {
         },
       ],
     })
+
+    const roomData = await roomComponent.account.room.fetch(roomPda)
+    expect(roomData.characterCount).to.equal(2, 'Character count is invalid')
   })
 
-  xit('Move character 1 to prepare an attack', async () => {
+  it('Move character 1 to prepare an attack', async () => {
     await tryApplySystem({
       systemId: systemMove.programId,
       args: {
@@ -372,7 +378,7 @@ describe('Imephemeral', () => {
     )
   })
 
-  xit('Attack character 2', async () => {
+  it('Attack character 2', async () => {
     await tryApplySystem({
       systemId: systemAttack.programId,
       args: {},
@@ -394,7 +400,7 @@ describe('Imephemeral', () => {
           ],
         },
         {
-          entity: roomPda,
+          entity: roomEntity,
           components: [
             {
               componentId: roomComponent.programId,
