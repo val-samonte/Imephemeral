@@ -7,6 +7,7 @@ import {
 import { createCharacter } from '../engine/createCharacter'
 import { magicBlockEngineAtom } from '../engine/MagicBlockEngineWrapper'
 import { systemSpawn } from '../engine/systemSpawn'
+import cn from 'classnames'
 
 export const FundModal = () => {
   const engine = useAtomValue(magicBlockEngineAtom)
@@ -18,6 +19,7 @@ export const FundModal = () => {
   const setMyCharacterComponent = useSetAtom(myCharacterComponentAtom)
   const [errorCreating, setErrorCreating] = useState('')
   const isCreatingPda = useRef(false)
+  const [funding, setFunding] = useState(false)
 
   useEffect(() => {
     if (!engine) return
@@ -61,7 +63,7 @@ export const FundModal = () => {
     setMyCharacterComponent,
   ])
 
-  if (sessionLamports === null) return null
+  // if (sessionLamports === null) return null
   if (!engine) return null
   if (characterEntityPda) return null
 
@@ -116,12 +118,20 @@ export const FundModal = () => {
         <h2 className='text-2xl'>Welcome to Imephemerals</h2>
         <p>Let's start by funding your session wallet first.</p>
         <button
-          onClick={() => {
-            engine.fundSession()
+          disabled={funding}
+          onClick={async () => {
+            setFunding(true)
+            try {
+              await engine.fundSession()
+            } catch (e) {}
+            setFunding(false)
           }}
-          className='border-2 border-amber-500 bg-slate-800 hover:bg-slate-700 px-5 py-2'
+          className={cn(
+            'border-2 border-amber-500 bg-slate-800 hover:bg-slate-700 px-5 py-2',
+            funding && 'opacity-50'
+          )}
         >
-          Fund Session Wallet
+          {funding ? 'Please Wait' : 'Fund Session Wallet'}
         </button>
       </div>
     </div>

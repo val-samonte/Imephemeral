@@ -183,6 +183,7 @@ export const Room: FC = () => {
       <div className='text-white font-mono font-bold absolute top-0 left-0 p-5 pointer-events-none'>
         <p>Move: WASD keys</p>
         <hr className='my-2' />
+        <h3 className='text-2xl text-yellow-500'>TESTNET</h3>
         <p>This version is still WIP</p>
         <p>
           Checkout the{' '}
