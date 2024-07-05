@@ -20,6 +20,10 @@ export const WORLD_PDA = new PublicKey(
   'JBupPMmv4zaXa5c8EdubsCPvoHZwCK7mwnDfmfs8dC5Y'
 )
 
+export const DUMMY_ROOM_PDA = new PublicKey(
+  'GYVYgZm5Cf2PQGNDYWQtqxhGgbk1X4zSdMQzuhiV8xkw'
+)
+
 const componentCharacter = CharacterIdl as Character
 const componentRoom = RoomIdl as Room
 const systemCreateRoom = CreateRoomIdl as CreateRoom

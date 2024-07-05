@@ -3,12 +3,11 @@ import { FC } from 'react'
 import {
   AddEntity,
   ApplySystem,
-  createDelegateInstruction,
   InitializeComponent,
 } from '@magicblock-labs/bolt-sdk'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
-import { Keypair, Transaction } from '@solana/web3.js'
+import { Keypair } from '@solana/web3.js'
 import { magicBlockEngineAtom } from '../engine/MagicBlockEngineWrapper'
 import {
   COMPONENT_ROOM_PROGRAM_ID,
@@ -53,19 +52,20 @@ export const InitializeRoom: FC = () => {
       'confirmed'
     )
 
-    console.log('Delegating to Ephemeral rollups')
+    // TODO: figure out why delegation is throwing Anchor error
+    // console.log('Delegating to Ephemeral rollups')
 
-    const delegateComponentInstruction = createDelegateInstruction({
-      entity: addEntity.entityPda,
-      account: initializeComponent.componentPda,
-      ownerProgram: COMPONENT_ROOM_PROGRAM_ID,
-      payer: engine.getSessionPayer(),
-    })
-    await engine.processSessionChainTransaction(
-      'DelegateComponent',
-      new Transaction().add(delegateComponentInstruction),
-      'finalized'
-    )
+    // const delegateComponentInstruction = createDelegateInstruction({
+    //   entity: addEntity.entityPda,
+    //   account: initializeComponent.componentPda,
+    //   ownerProgram: COMPONENT_ROOM_PROGRAM_ID,
+    //   payer: engine.getSessionPayer(),
+    // })
+    // await engine.processSessionChainTransaction(
+    //   'DelegateComponent',
+    //   new Transaction().add(delegateComponentInstruction),
+    //   'finalized'
+    // )
 
     const applySystem = await ApplySystem({
       authority: engine.getSessionPayer(),
@@ -85,12 +85,12 @@ export const InitializeRoom: FC = () => {
         },
       ],
     })
-    await engine.processSessionEphemeralTransaction(
+    await engine.processSessionChainTransaction(
       'SystemCreateRoom',
       applySystem.transaction
     )
 
-    console.log('Entity PDA', addEntity.entityPda)
+    console.log('Entity PDA', addEntity.entityPda.toBase58())
   }
 
   return (

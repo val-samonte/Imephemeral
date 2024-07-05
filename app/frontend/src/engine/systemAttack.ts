@@ -3,20 +3,19 @@ import { PublicKey } from '@solana/web3.js'
 import { MagicBlockEngine } from './MagicBlockEngine'
 import {
   COMPONENT_CHARACTER_PROGRAM_ID,
-  SYSTEM_MOVE_CHARACTER_PROGRAM_ID,
+  COMPONENT_ROOM_PROGRAM_ID,
+  DUMMY_ROOM_PDA,
+  SYSTEM_ATTACK_PROGRAM_ID,
 } from './programs'
 
-export const systemMove = async (
+export const systemAttack = async (
   engine: MagicBlockEngine,
   characterEntity: PublicKey,
-  direction: number
+  targetEntity: PublicKey
 ) => {
   const applySystem = await ApplySystem({
     authority: engine.getSessionPayer(),
-    systemId: SYSTEM_MOVE_CHARACTER_PROGRAM_ID,
-    args: {
-      direction,
-    },
+    systemId: SYSTEM_ATTACK_PROGRAM_ID,
     entities: [
       {
         entity: characterEntity,
@@ -26,10 +25,26 @@ export const systemMove = async (
           },
         ],
       },
+      {
+        entity: targetEntity,
+        components: [
+          {
+            componentId: COMPONENT_CHARACTER_PROGRAM_ID,
+          },
+        ],
+      },
+      {
+        entity: DUMMY_ROOM_PDA,
+        components: [
+          {
+            componentId: COMPONENT_ROOM_PROGRAM_ID,
+          },
+        ],
+      },
     ],
   })
   await engine.processSessionChainTransaction(
-    'SystemMove',
+    'SystemAttack',
     applySystem.transaction
   )
 }
